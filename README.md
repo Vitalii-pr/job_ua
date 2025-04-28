@@ -23,3 +23,6 @@ npm install
 npm run dev
 
 ```
+
+
+### [Link to our design](https://www.figma.com/design/rhlYtfsHWBaUS0sW9YKODp/Job-search-site?node-id=32-2141&p=f&t=nWjbo7x6KJwQQr7i-0)
