@@ -1,12 +1,11 @@
 .material-box {
   width: 100%;
   max-width: 1088px;
-  background-color: #FFFFFF;
+  background: white;
   border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
   font-family: 'Fira Sans', sans-serif;
 }
@@ -14,11 +13,6 @@
 .material-box:hover {
   transform: translateY(-2px);
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.material-box:focus {
-  outline: 2px solid #84112D;
-  outline-offset: 2px;
 }
 
 .material-inner-box {
@@ -45,23 +39,36 @@
   line-height: 1.2;
 }
 
+.select-button {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.select-button:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
 .like-button {
   cursor: pointer;
   padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
-  transition: transform 0.2s;
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .like-button:hover {
-  transform: scale(1.1);
+  background-color: rgba(0,0,0,0.05);
 }
 
-.like-button:focus {
-  outline: none;
+.like-button.liked {
+  color: #84112D;
+  stroke: #84112D !important;
+  fill: #84112D !important;
 }
 
 .material-details {
@@ -79,6 +86,12 @@
 .tag {
   font-size: 14px;
   color: #666666;
+  transition: all 0.2s ease;
+}
+
+.tag-highlighted {
+  color: #84112d;
+  font-weight: 500;
 }
 
 .tag-separator {
@@ -97,14 +110,12 @@
   color: #333333;
   line-height: 1.5;
   margin-bottom: 12px;
-  /* Limit to 3 lines with ellipsis */
   display: -webkit-box;
   -webkit-line-clamp: 3;
-  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-height: 4.5em; /* 3 lines * 1.5 line-height */
+  max-height: 4.5em;
 }
 
 .material-metadata {
@@ -131,16 +142,13 @@
   color: #888888;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .material-inner-box {
     padding: 16px;
   }
-  
   .material-title {
     font-size: 18px;
   }
-  
   .material-description {
     font-size: 13px;
   }
