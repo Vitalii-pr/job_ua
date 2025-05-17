@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;700&display=swap');
+
+.navbar-container {
+  width: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  font-family: 'Fira Sans', sans-serif;
+  height: 60px; /* Fixed height for navbar */
+}
+
+.navbar {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.navbar-logo img {
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-text {
+  margin-left: 5px;
+}
+
+.navbar-links {
+  display: flex;
+  height: 100%;
+}
+
+.nav-button {
+  background: transparent;
+  color: white;
+  border: none;
+  font-weight: 700;
+  font-family: 'Fira Sans', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  /* Fixed width for each button to prevent resizing */
+  padding: 0;
+  position: relative;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+}
+
+.nav-button-text {
+  padding: 0 20px;
+  white-space: nowrap;
+}
+
+.nav-button.active {
+  background-color: #84112D;
+}
+
+.chevron-down {
+  margin-left: 8px;
+}
