@@ -1,0 +1,152 @@
+.vacancies-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Fira Sans', sans-serif;
+}
+
+/* Search header box - black box below navbar */
+.search-header-box {
+  width: 100%;
+  height: 192px;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 64px;
+  box-sizing: border-box;
+}
+
+/* Search box - centered black box */
+.search-box {
+  width: 1088px;
+  height: 94px;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Search title */
+.search-title {
+  color: white;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+/* Search form container */
+.search-form {
+  margin-top: 21px;
+}
+
+/* Container for search inputs and button */
+.search-input-container {
+  display: flex;
+  gap: 20px; /* Equal spacing between elements */
+  align-items: center;
+}
+
+/* Search field */
+.search-field {
+  width: 416px;
+  height: 48px;
+  background-color: white;
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Search icon */
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Search input */
+.search-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding-left: 48px; /* Space for the icon */
+  padding-right: 12px;
+  font-family: 'Fira Sans', sans-serif;
+  font-size: 16px;
+  outline: none;
+}
+
+/* Specialization field */
+.specialization-field {
+  width: 416px;
+  height: 48px;
+  background-color: white;
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Specialization select */
+.specialization-select {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding-left: 12px;
+  padding-right: 40px; /* Space for the chevron */
+  font-family: 'Fira Sans', sans-serif;
+  font-size: 16px;
+  color: #888;
+  appearance: none; /* Remove default arrow */
+  outline: none;
+  cursor: pointer;
+}
+
+/* Chevron down icon for select */
+.chevron-down {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Allows clicks to pass through to select */
+}
+
+/* Search button */
+.search-button {
+  width: 192px;
+  height: 48px;
+  background-color: #84112D;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #6d0e25;
+}
+
+/* Vacancies list section */
+.vacancies-list {
+  max-width: 1088px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.no-vacancies {
+  text-align: center;
+  color: #666;
+  margin-top: 40px;
+  font-family: 'Fira Sans', sans-serif;
+}
