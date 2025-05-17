@@ -1,152 +1,166 @@
+/* Base reset */
 .vacancies-container {
-  width: 100%;
+  font-family: 'Fira Sans', sans-serif;
+  background-color: #f5f5f5;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
-  font-family: 'Fira Sans', sans-serif;
 }
 
-/* Search header box - black box below navbar */
+/* Search header */
 .search-header-box {
-  width: 100%;
-  height: 192px;
-  background-color: black;
+  background-color: #000;
+  padding: 32px 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding-top: 64px;
-  box-sizing: border-box;
 }
-
-/* Search box - centered black box */
 .search-box {
   width: 1088px;
-  height: 94px;
-  background-color: black;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+  background-color: #000;
+  border-radius: 8px;
+  padding: 24px 32px;
 }
-
-/* Search title */
 .search-title {
-  color: white;
-  font-size: 30px;
-  font-weight: 500;
-  line-height: 22px;
-  letter-spacing: 0;
-  text-align: left;
-  margin: 0;
-  padding: 0;
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 16px;
 }
-
-/* Search form container */
-.search-form {
-  margin-top: 21px;
-}
-
-/* Container for search inputs and button */
 .search-input-container {
   display: flex;
-  gap: 20px; /* Equal spacing between elements */
-  align-items: center;
+  gap: 16px;
 }
-
-/* Search field */
-.search-field {
-  width: 416px;
-  height: 48px;
-  background-color: white;
-  border-radius: 4px;
+.search-field,
+.specialization-field {
   position: relative;
-  display: flex;
-  align-items: center;
+  flex: 1;
+  height: 48px;
+  background: #fff;
+  border-radius: 4px;
 }
-
-/* Search icon */
-.search-icon {
+.search-icon,
+.chevron-down {
   position: absolute;
-  left: 12px;
   top: 50%;
   transform: translateY(-50%);
+  pointer-events: none;
 }
-
-/* Search input */
+.search-field .search-icon { left: 12px; }
 .search-input {
   width: 100%;
   height: 100%;
+  padding: 0 12px 0 44px;
   border: none;
-  background: transparent;
-  padding-left: 48px; /* Space for the icon */
-  padding-right: 12px;
-  font-family: 'Fira Sans', sans-serif;
-  font-size: 16px;
   outline: none;
+  font-size: 16px;
 }
-
-/* Specialization field */
-.specialization-field {
-  width: 416px;
-  height: 48px;
-  background-color: white;
-  border-radius: 4px;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-/* Specialization select */
-.specialization-select {
+.specialization-field select {
   width: 100%;
   height: 100%;
   border: none;
-  background: transparent;
-  padding-left: 12px;
-  padding-right: 40px; /* Space for the chevron */
-  font-family: 'Fira Sans', sans-serif;
+  padding: 0 12px;
   font-size: 16px;
   color: #888;
-  appearance: none; /* Remove default arrow */
+  background: transparent;
+  appearance: none;
   outline: none;
+}
+.specialization-field .chevron-down { right: 12px; stroke: #84112D; }
+.search-button {
+  width: 192px;
+  background: #84112D;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
   cursor: pointer;
 }
 
-/* Chevron down icon for select */
-.chevron-down {
+/* Layout: sidebar + main */
+.page-content {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
+/* Sidebar filters */
+.filters-sidebar {
+  width: 280px;
+}
+.filter-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.filter-section label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+}
+.filter-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 12px 0 8px;
+}
+.select-wrapper {
+  position: relative;
+  margin-bottom: 8px;
+}
+.select-wrapper.small { width: 100%; }
+.select-wrapper select {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  appearance: none;
+  font-size: 14px;
+  color: #333;
+}
+.select-wrapper .chevron-down {
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none; /* Allows clicks to pass through to select */
 }
-
-/* Search button */
-.search-button {
-  width: 192px;
-  height: 48px;
-  background-color: #84112D;
-  color: white;
-  border: none;
+.salary-values {
+  font-size: 13px;
+  margin-top: 4px;
+}
+.filter-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.reset-button {
+  background: transparent;
+  border: 1px solid #84112D;
+  color: #84112D;
+  padding: 8px 16px;
   border-radius: 4px;
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 500;
-  font-size: 16px;
+  cursor: pointer;
+}
+.apply-button {
+  background: #84112D;
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-.search-button:hover {
-  background-color: #6d0e25;
-}
-
-/* Vacancies list section */
+/* Vacancies list */
 .vacancies-list {
-  max-width: 1088px;
-  margin: 30px auto;
-  padding: 0 20px;
+  flex: 1;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  min-height: 400px;
 }
-
 .no-vacancies {
   text-align: center;
   color: #666;
-  margin-top: 40px;
-  font-family: 'Fira Sans', sans-serif;
+  font-size: 16px;
 }
