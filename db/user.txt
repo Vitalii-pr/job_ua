@@ -1,0 +1,152 @@
+ID: 1
+Email: test1@gmail.com
+Password: password1
+Photo: user1.jpg
+Name: Test
+Type: Employee
+Surname: Test
+Bio: Test
+Skills: Figma 4, UI/UX 3, Prototyping 3, Product design 3, Wireframing 4, Тестування 2, Дослідження користувачів 2, Responsive design 2, Інформаційна архітектура 3, Adobe Photoshop 4, Adobe Illustrator 4 
+Position: UI UX Designer
+Qualification: Junior
+Goals: Покращити дослідження користувачів, Вдосконалювати свої навички у сфері UX, Розробляти інтуїтивно зрозумілі інтерфейси
+English_lvl: Intermediate
+Past_projects: Мобільний застосунок для планування особистого бюджету; Вебсайт для бронювання подорожей
+Past_roles: Я створила інтерактивні прототипи для застосунку, що допомагає користувачам легко контролювати свої доходи і витрати. У мої обов’язки входило розроблення адаптивного дизайну, тестування прототипів на реальних користувачах та вдосконалення UX на основі їхнього фідбеку.; У цьому проєкті я була асистентом у створенні UX-дизайну для користувацького потоку. Брала участь у дизайні зручного користувацького потоку для платформи, що дозволяє бронювати квитки та готелі. Ви відповідали за розроблення wireframes для ключових сторінок, а також за тестування та коригування інтерфейсу на основі аналітики поведінки користувачів.
+Resume: resume.pdf
+Portfolio: portfolio.pdf
+Employment_type: Часткова зайнятість, Проектна робота, Стажування
+Work_format: Віддалена, Віддалена/офіс
+City: Львів
+Moving_posibility: false
+Desired_pay: 600
+Desired_hour_pay: 10
+Certificates: certificate.txt
+Recomendations: recomendation.txt
+Disliked_vacancies: 1
+Liked_materials: 1
+Wieved_vacancies: 1, 2
+Wieved_materials: 1, 2
+organization_type: None
+cities_with_offices: None
+benefits: None
+possibilities: None
+website: None
+telegram: None
+linkedin: None
+messages: None
+messages_email: None
+
+ID: 2
+Email: test2@gmail.com
+Password: password2
+Photo: user2.svg
+Name: PixelPath Studios
+Type: Company
+Surname: None
+Bio: PixelPath Studios — це компанія, що спеціалізується на розробці цифрових рішень, таких як мобільні додатки, вебсайти та інтерфейси для різних платформ. Ми співпрацюємо з клієнтами зі всього світу, створюючи продукти, які вирізняються своєю функціональністю та естетикою. Ми віримо в командну роботу, інновації та прагнемо створювати найкращі продукти для наших клієнтів.
+Skills: None
+Qualification: None
+Goals: None
+English_lvl: None
+Past_projects: None
+Past_roles: None
+Resume: None
+Portfolio: None
+Employment_type: None
+Work_format: None
+City: Київ, Україна
+Moving_posibility: None
+Desired_pay: None
+Desired_hour_pay: None
+Certificates: None
+Recomendations: None
+Disliked_vacancies: None
+Liked_materials: None
+Wieved_vacancies: None
+Wieved_materials: None
+organization_type: Компанія
+cities_with_offices: Львів
+benefits: Win condition
+possibilities: None
+website: None
+telegram: None
+linkedin: None
+messages: None
+messages_email: None
+
+ID: 3
+Email: test3@gmail.com
+Password: password3
+Photo: user3.svg
+Name: MoveWorks
+Type: Company
+Surname: None
+Bio: MoveWorks — це компанія, що спеціалізується на розробці цифрових рішень, таких як мобільні додатки, вебсайти та інтерфейси для різних платформ. Ми співпрацюємо з клієнтами зі всього світу, створюючи продукти, які вирізняються своєю функціональністю та естетикою. Ми віримо в командну роботу, інновації та прагнемо створювати найкращі продукти для наших клієнтів.
+Skills: None
+Qualification: None
+Goals: None
+English_lvl: None
+Past_projects: None
+Past_roles: None
+Resume: None
+Portfolio: None
+Employment_type: None
+Work_format: None
+City: Київ, Україна
+Moving_posibility: None
+Desired_pay: None
+Desired_hour_pay: None
+Certificates: None
+Recomendations: None
+Disliked_vacancies: None
+Liked_materials: None
+Wieved_vacancies: None
+Wieved_materials: None
+organization_type: Компанія
+cities_with_offices: Львів
+benefits: Win condition
+possibilities: None
+website: None
+telegram: None
+linkedin: None
+messages: None
+messages_email: None
+
+ID: 4
+Email: test4@gmail.com
+Password: password4
+Photo: user4.svg
+Name: MedTech Innovations
+Type: Company
+Surname: None
+Bio: MedTech Innovations — це компанія, що спеціалізується на розробці цифрових рішень, таких як мобільні додатки, вебсайти та інтерфейси для різних платформ. Ми співпрацюємо з клієнтами зі всього світу, створюючи продукти, які вирізняються своєю функціональністю та естетикою. Ми віримо в командну роботу, інновації та прагнемо створювати найкращі продукти для наших клієнтів.
+Skills: None
+Qualification: None
+Goals: None
+English_lvl: None
+Past_projects: None
+Past_roles: None
+Resume: None
+Portfolio: None
+Employment_type: None
+Work_format: None
+City: Київ, Україна
+Moving_posibility: None
+Desired_pay: None
+Desired_hour_pay: None
+Certificates: None
+Recomendations: None
+Disliked_vacancies: None
+Liked_materials: None
+Wieved_vacancies: None
+Wieved_materials: None
+organization_type: Компанія
+cities_with_offices: Львів
+benefits: Win condition
+possibilities: None
+website: None
+telegram: None
+linkedin: None
+messages: None
+messages_email: None
