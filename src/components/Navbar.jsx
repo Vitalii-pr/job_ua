@@ -5,7 +5,6 @@ import companyLogoText from '/public/company_logo_text.svg';
 const Navbar = ({ userType = 'employee', onPageChange }) => {
   const [activeTab, setActiveTab] = useState('Вакансії');
 
-  // Define navigation items based on user type
   const navItems = userType === 'employee' 
     ? [
         { id: 'vacancies', label: 'Вакансії', path: '/vacancies' },
@@ -22,27 +21,50 @@ const Navbar = ({ userType = 'employee', onPageChange }) => {
 
   const handleNavigation = (item) => {
     setActiveTab(item.label);
-    // Call the parent component's navigation handler
     if (onPageChange) {
       onPageChange(item.label);
     }
   };
 
   return (
-    <div className="navbar-container">
-      <div className="navbar">
-        <div className="navbar-logo">
-          <img src={companyLogo} alt="Company Logo" />
-          <img src={companyLogoText} alt="Company Name" className="logo-text" />
+    <div className="w-full bg-black flex justify-center h-[60px]" style={{ fontFamily: "'Fira Sans', sans-serif" }}>
+      <div className="w-[90%] flex justify-between items-center h-full">
+        {/* Logo */}
+        <div className="flex items-center h-full">
+          <img 
+            src={companyLogo} 
+            alt="Company Logo" 
+            className="h-full object-contain" 
+          />
+          <img 
+            src={companyLogoText} 
+            alt="Company Name" 
+            className="ml-[5px] h-full object-contain" 
+          />
         </div>
-        <div className="navbar-links">
+
+        {/* Navigation Links */}
+        <div className="flex h-full gap-[2px]">
           {navItems.map((item) => (
             <button
               key={item.id}
-              className={`nav-button ${activeTab === item.label ? 'active' : ''} ${item.id === 'profile' ? 'profile' : ''}`}
               onClick={() => handleNavigation(item)}
+              className={`
+                bg-transparent text-white border-none font-bold cursor-pointer
+                flex items-center justify-center h-full px-[20px] relative box-border m-0
+                select-none border-l border-l-[rgba(255,255,255,0.1)]
+                ${activeTab === item.label ? 'bg-[#84112D]' : ''}
+                ${item.id === 'profile' ? 'justify-start' : ''}
+                focus:outline-none focus:ring-0 active:outline-none active:ring-0
+              `}
+              style={{ fontFamily: "'Fira Sans', sans-serif" }}
             >
-              <span className="nav-button-text">{item.label}</span>
+              <span className={`
+                whitespace-nowrap pointer-events-none text-[15px] p-0 text-center
+                ${item.id === 'profile' ? 'mr-[32px]' : ''}
+              `}>
+                {item.label}
+              </span>
               {item.hasChevron && (
                 <svg
                   width="12.8"
@@ -50,11 +72,11 @@ const Navbar = ({ userType = 'employee', onPageChange }) => {
                   viewBox="0 0 12.8 6.4"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="chevron-down"
+                  className="absolute right-[20px] top-1/2 -translate-y-1/2"
+                  stroke="white"
                 >
                   <path
                     d="M1 1L6.4 5.4L11.8 1"
-                    stroke="white"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
