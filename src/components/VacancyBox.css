@@ -9,6 +9,18 @@
   justify-content: center;
   align-items: center;
   font-family: 'Fira Sans', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.vacancy-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.vacancy-box:focus {
+  outline: 2px solid #84112D;
+  outline-offset: 2px;
 }
 
 .vacancy-inner-box {

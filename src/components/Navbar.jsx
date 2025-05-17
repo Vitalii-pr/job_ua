@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import companyLogo from '/public/company_logo.svg';
-import companyLogoText from '/public/company_logo_text.svg';
+import companyLogo from '/company_logo.svg';
+import companyLogoText from '/company_logo_text.svg';
 
 const Navbar = ({ userType = 'employee' }) => {
   const navigate = useNavigate();
