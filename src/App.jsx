@@ -6,7 +6,7 @@ import { auth } from './firebase';
 
 import Navbar from './components/Navbar';
 import Login from './components/Login';
-import ProfilePage from './components/ProfilePage';
+import ProfilePage from './pages/ProfilePage';
 import VacanciesPage from './pages/VacanciesPage';
 import MaterialsPage from './pages/MaterialsPage';
 import HistoryPage from './pages/HistoryPage';
@@ -17,7 +17,7 @@ import ResponsesPage from './pages/ResponsesPage';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [userType, setUserType] = useState('employee'); // Or 'employer'
+  const [userType, setUserType] = useState('employee');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -68,7 +68,7 @@ function App() {
                 <Route path="/vacancies" element={<VacanciesPage />} />
                 <Route path="/history" element={<HistoryPage />} />
                 <Route path="/materials" element={<MaterialsPage />} />
-                <Route path="/profile" element={<ProfilePage user={user} />} />
+                <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
                 <Route path="*" element={<Navigate to="/vacancies" />} />
               </>
             ) : (
@@ -76,7 +76,7 @@ function App() {
                 <Route path="/vacancies" element={<VacanciesPage />} />
                 <Route path="/candidates" element={<CandidatesPage />} />
                 <Route path="/responses" element={<ResponsesPage />} />
-                <Route path="/profile" element={<ProfilePage user={user} />} />
+                <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
                 <Route path="*" element={<Navigate to="/vacancies" />} />
               </>
             )}

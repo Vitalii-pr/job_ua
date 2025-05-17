@@ -31,6 +31,12 @@ const Login = ({ onLogin }) => {
           role: 'employee',
           created_at: new Date(),
           updated_at: new Date(),
+          contacts: {
+            email: user.email,
+            phone: '',
+            telegram: '',
+            linkedin: '',
+          },
         });
       }
 
