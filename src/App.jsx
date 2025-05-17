@@ -1,55 +1,78 @@
-import { useState } from 'react'
-import './App.css'
-import Navbar from './components/Navbar'
-import './components/Navbar.css'
-
-// Import all pages
-import VacanciesPage from './pages/VacanciesPage'
-import HistoryPage from './pages/HistoryPage'
-import MaterialsPage from './pages/MaterialsPage'
-import ProfilePage from './pages/ProfilePage'
-import CandidatesPage from './pages/CandidatesPage'
-import ResponsesPage from './pages/ResponsesPage'
+import { useState, useEffect } from 'react';
+import './App.css';
+import Navbar from './components/Navbar';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from './firebase';
+import Login from './components/Login';
+import ProfilePage from './components/ProfilePage';
 
 function App() {
-  const [userType, setUserType] = useState('employee')
-  const [activePage, setActivePage] = useState('Вакансії')
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState('employee');
+  const [activePage, setActivePage] = useState('Вакансії');
 
-  const toggleUserType = () => {
-    setUserType(userType === 'employee' ? 'employer' : 'employee')
-  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
 
-  // Function to handle navigation between pages
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
   const handlePageChange = (pageName) => {
-    setActivePage(pageName)
-  }
+    setActivePage(pageName);
+  };
 
-  // Render the active page based on the selected tab
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setActivePage('Вакансії');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   const renderActivePage = () => {
     switch (activePage) {
-      case 'Вакансії':
-        return <VacanciesPage />
-      case 'Історія відгуків':
-        return <HistoryPage />
-      case 'Корисні матеріали':
-        return <MaterialsPage />
       case 'Мій профіль':
-        return <ProfilePage userType={userType} toggleUserType={toggleUserType} />
-      case 'Кандидати':
-        return <CandidatesPage />
-      case 'Відгуки кандидатів':
-        return <ResponsesPage />
+        return <ProfilePage user={user} />;
       default:
-        return <VacanciesPage />
+        return <div>{activePage}</div>;
     }
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
   }
 
   return (
     <div className="app">
-      <Navbar userType={userType} onPageChange={handlePageChange} />
-      {renderActivePage()}
+      <Navbar 
+        userType={userType} 
+        onPageChange={handlePageChange} 
+        user={user}
+        onLogout={handleLogout}
+      />
+      <main className="main-content">
+        {renderActivePage()}
+      </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
