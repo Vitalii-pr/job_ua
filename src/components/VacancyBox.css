@@ -1,0 +1,119 @@
+.vacancy-box {
+  width: 976px;
+  height: 224px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Fira Sans', sans-serif;
+}
+
+.vacancy-inner-box {
+  width: 928px;
+  height: 176px;
+  margin-top: 24px;
+  margin-left: 24px;
+  display: flex;
+  position: relative;
+}
+
+.company-logo {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.company-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vacancy-content {
+  width: 757px;
+  height: 176px;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.vacancy-header {
+  width: 757px;
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+}
+
+.vacancy-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.company-name {
+  font-size: 18px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vacancy-details {
+  width: 757px;
+  height: 102px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.vacancy-description {
+  width: 757px;
+  height: 68px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.vacancy-metadata {
+  width: 757px;
+  height: 16px;
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  color: #888;
+  font-size: 14px;
+}
+
+.views-count {
+  display: flex;
+  align-items: center;
+}
+
+.eye-icon {
+  margin-right: 4px;
+}
+
+.separator {
+  margin: 0 12px;
+  color: #ccc;
+}
+
+.posting-date {
+  color: #888;
+}

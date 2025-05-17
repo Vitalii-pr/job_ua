@@ -1,81 +1,186 @@
 import React, { useState, useMemo } from 'react';
 import './VacanciesPage.css';
+import VacancyBox from '../components/VacancyBox';
 
+// Test company data to match the structure in user.txt
+const testCompanies = [
+  {
+    ID: 2,
+    Email: 'test2@gmail.com',
+    Password: 'password2',
+    Photo: 'user2.svg',
+    Name: 'PixelPath Studios',
+    Type: 'Company',
+    Surname: null,
+    Bio: 'PixelPath Studios — це компанія, що спеціалізується на розробці цифрових рішень, таких як мобільні додатки, вебсайти та інтерфейси для різних платформ. Ми співпрацюємо з клієнтами зі всього світу, створюючи продукти, які вирізняються своєю функціональністю та естетикою. Ми віримо в командну роботу, інновації та прагнемо створювати найкращі продукти для наших клієнтів.',
+    Skills: null,
+    Qualification: null,
+    Goals: null,
+    English_lvl: null,
+    Past_projects: null,
+    Past_roles: null,
+    Resume: null,
+    Portfolio: null,
+    Employment_type: null,
+    Work_format: null,
+    City: 'Київ, Україна',
+    Moving_posibility: null,
+    Desired_pay: null,
+    Desired_hour_pay: null,
+    Certificates: null,
+    Recomendations: null,
+    Disliked_vacancies: null,
+    Liked_materials: null,
+    Wieved_vacancies: null,
+    Wieved_materials: null,
+    organization_type: 'Компанія',
+    cities_with_offices: 'Львів',
+    benefits: 'Win condition',
+    possibilities: null,
+    website: null,
+    telegram: null,
+    linkedin: null,
+    messages: null,
+    messages_email: null
+  },
+  {
+    ID: 3,
+    Email: 'test3@gmail.com',
+    Password: 'password3',
+    Photo: 'user3.svg',
+    Name: 'MoveWorks',
+    Type: 'Company',
+    Surname: null,
+    Bio: 'MoveWorks — це компанія, що спеціалізується на розробці цифрових рішень, таких як мобільні додатки, вебсайти та інтерфейси для різних платформ. Ми співпрацюємо з клієнтами зі всього світу, створюючи продукти, які вирізняються своєю функціональністю та естетикою. Ми віримо в командну роботу, інновації та прагнемо створювати найкращі продукти для наших клієнтів.',
+    Skills: null,
+    Qualification: null,
+    Goals: null,
+    English_lvl: null,
+    Past_projects: null,
+    Past_roles: null,
+    Resume: null,
+    Portfolio: null,
+    Employment_type: null,
+    Work_format: null,
+    City: 'Київ, Україна',
+    Moving_posibility: null,
+    Desired_pay: null,
+    Desired_hour_pay: null,
+    Certificates: null,
+    Recomendations: null,
+    Disliked_vacancies: null,
+    Liked_materials: null,
+    Wieved_vacancies: null,
+    Wieved_materials: null,
+    organization_type: 'Компанія',
+    cities_with_offices: 'Львів',
+    benefits: 'Win condition',
+    possibilities: null,
+    website: null,
+    telegram: null,
+    linkedin: null,
+    messages: null,
+    messages_email: null
+  },
+  {
+    ID: 4,
+    Email: 'test4@gmail.com',
+    Password: 'password4',
+    Photo: 'user4.svg',
+    Name: 'MedTech Innovations',
+    Type: 'Company',
+    Surname: null,
+    Bio: 'MedTech Innovations — це компанія, що спеціалізується на розробці цифрових рішень, таких як мобільні додатки, вебсайти та інтерфейси для різних платформ. Ми співпрацюємо з клієнтами зі всього світу, створюючи продукти, які вирізняються своєю функціональністю та естетикою. Ми віримо в командну роботу, інновації та прагнемо створювати найкращі продукти для наших клієнтів.',
+    Skills: null,
+    Qualification: null,
+    Goals: null,
+    English_lvl: null,
+    Past_projects: null,
+    Past_roles: null,
+    Resume: null,
+    Portfolio: null,
+    Employment_type: null,
+    Work_format: null,
+    City: 'Київ, Україна',
+    Moving_posibility: null,
+    Desired_pay: null,
+    Desired_hour_pay: null,
+    Certificates: null,
+    Recomendations: null,
+    Disliked_vacancies: null,
+    Liked_materials: null,
+    Wieved_vacancies: null,
+    Wieved_materials: null,
+    organization_type: 'Компанія',
+    cities_with_offices: 'Львів',
+    benefits: 'Win condition',
+    possibilities: null,
+    website: null,
+    telegram: null,
+    linkedin: null,
+    messages: null,
+    messages_email: null
+  }
+];
+
+// Test vacancy data to match the structure in vacancy.text
 const testVacancies = [
   {
-    id: 1,
-    title: 'Senior React Developer',
-    company: 'TechCo',
-    salary: 120000,
-    level: 'senior',
-    format: 'remote',
-    employmentType: 'full',
-    specialization: 'it',
-    location: 'kyiv',
-    englishLevel: 'advanced',
-    views: 245,
-    datePosted: '2025-05-15T10:00:00',
-    match: 95
+    ID: 1,
+    Title: 'UI / UX Designer',
+    Payrate: 25000,
+    Position: 'UI UX Designer',
+    Qualification: 'Junior',
+    Work_format: 'Віддалена',
+    Work_type: 'Повна зайнятість',
+    Work_place: 'Світ',
+    English_lvl: 'Intermediate',
+    Description: 'PixelPath Studios шукає креативного та досвідченого UI/UX дизайнера, який здатен створювати інтуїтивно зрозумілі та візуально привабливі інтерфейси для цифрових продуктів. На цій посаді ви будете працювати над розробкою вебсайтів, мобільних додатків та інших цифрових платформ у співпраці з командою розробників, дизайнерів і маркетологів. Основна мета вашої роботи — забезпечити, щоб наші продукти були простими у використанні, відповідали потребам клієнтів і виглядали професійно. Ця роль передбачає створення wireframes, інтерактивних прототипів і мокапів, тестування інтерфейсів користувачів та впровадження їх у реальні проекти. Ви також братимете участь у мозкових штурмах і творчих сесіях, де зможете презентувати свої ідеї, орієнтуючись на сучасні тренди в UX/UI дизайні. Ми шукаємо людину, яка здатна мислити аналітично та водночас має творчу жилку. Якщо ви прагнете створювати продукти, що відповідають сучасним стандартам дизайну і надають користувачам винятковий досвід, ця вакансія для вас!',
+    Work_conditions: 'Повна зайнятість, 40 годин на тиждень. ; Конкурентна зарплата + бонуси за успішно завершені проекти.',
+    Skills: 'UI/UX 1, Wireframes 1, Інтерактивніпрототипи 1, Продуктовий дизайн 1, Мокапи 0, Тестування 0',
+    Benefits: 'Гнучкий графік, Бюджет на професійний розвиток, Комфортний офіс',
+    Host_id: 2,
+    Is_active: true,
+    Created_at: '2025-10-30',
+    Wieved: 40
   },
   {
-    id: 2,
-    title: 'Junior Marketing Manager',
-    company: 'StartupsUA',
-    salary: 25000,
-    level: 'junior',
-    format: 'office',
-    employmentType: 'full',
-    specialization: 'marketing',
-    location: 'lviv',
-    englishLevel: 'intermediate',
-    views: 180,
-    datePosted: '2025-05-16T15:30:00',
-    match: 85
+    ID: 2,
+    Title: 'Моушин дизайнер',
+    Payrate: 15000,
+    Position: 'Motion Designer',
+    Qualification: 'Junior',
+    Work_format: 'Віддалена',
+    Work_type: 'Неповна зайнятість',
+    Work_place: 'Україна',
+    English_lvl: 'Intermediate',
+    Description: 'MoveWorks шукає талановитого motion-дизайнера для створення інноваційного та яскравого візуального контенту. Ви будете розробляти анімації для рекламних кампаній, соціальних медіа, промо-відео та інтерактивних веб-сторінок. Ваша робота включатиме створення візуально привабливих та ефективних анімацій, які допоможуть привлечти та залишити увагу вашій аудиторії.',
+    Work_conditions: 'Неповна зайнятість, 20 годин на тиждень. ; Конкурентна зарплата + бонуси за успішно завершені проекти.',
+    Skills: 'Motion Designer 1, Wireframes 1, Інтерактивніпрототипи 1, Продуктовий дизайн 1, Мокапи 0, Тестування 0',
+    Benefits: 'Гнучкий графік, Бюджет на професійний розвиток, Комфортний офіс',
+    Host_id: 3,
+    Is_active: true,
+    Created_at: '2025-09-19',
+    Wieved: 37
   },
   {
-    id: 3,
-    title: 'Middle Sales Representative',
-    company: 'SalesForce',
-    salary: 45000,
-    level: 'middle',
-    format: 'hybrid',
-    employmentType: 'part',
-    specialization: 'sales',
-    location: 'kyiv',
-    englishLevel: 'upper',
-    views: 120,
-    datePosted: '2025-05-17T09:00:00',
-    match: 75
-  },
-  {
-    id: 4,
-    title: 'Finance Intern',
-    company: 'BigBank',
-    salary: 15000,
-    level: 'junior',
-    format: 'office',
-    employmentType: 'intern',
-    specialization: 'finance',
-    location: 'kyiv',
-    englishLevel: 'basic',
-    views: 90,
-    datePosted: '2025-05-17T11:00:00',
-    match: 65
-  },
-  {
-    id: 5,
-    title: 'HR Business Partner',
-    company: 'GlobalHR',
-    salary: 70000,
-    level: 'middle',
-    format: 'hybrid',
-    employmentType: 'full',
-    specialization: 'hr',
-    location: 'lviv',
-    englishLevel: 'advanced',
-    views: 150,
-    datePosted: '2025-05-16T12:00:00',
-    match: 88
+    ID: 3,
+    Title: 'UI/UX Designer (Healthcare Solutions)',
+    Payrate: 30000,
+    Position: 'UI UX Designer',
+    Qualification: 'Middle',
+    Work_format: 'Віддалена',
+    Work_type: 'Неповна зайнятість',
+    Work_place: 'Україна',
+    English_lvl: 'Intermediate',
+    Description: 'MedTech Innovations шукає UI/UX дизайнера для розробки інтерфейсів для медичних платформ і додатків. Ви будете працювати над створенням зручного UX для пацієнтів, лікарів і адміністраторів медичних закладів.',
+    Work_conditions: 'Неповна зайнятість, 20 годин на тиждень. ; Конкурентна зарплата + бонуси за успішно завершені проекти.',
+    Skills: 'UI/UX 1, Wireframes 1, Інтерактивніпрототипи 1, Продуктовий дизайн 1, Мокапи 0, Тестування 0',
+    Benefits: 'Гнучкий графік, Бюджет на професійний розвиток, Комфортний офіс',
+    Host_id: 4,
+    Is_active: true,
+    Created_at: '2025-08-23',
+    Wieved: 23
   }
 ];
 
@@ -320,24 +425,25 @@ const VacanciesPage = () => {
           </div>
         </aside>
 
-        {/* Main vacancy results (empty for now) */}
+        {/* Main vacancy results with VacancyBox component */}
         <main className="vacancies-list">
-        {filteredVacancies.length > 0
-          ? filteredVacancies.map(v => (
-              <div key={v.id} className="vacancy-card">
-                {/* тут ваш JSX-код для картки вакансії */}
-                <div className="vacancy-info">
-                  <h3>{v.title}</h3>
-                  <p>{v.company}</p>
-                  <p>{v.salary?.toLocaleString()}₴ · {v.level} · {v.format}</p>
-                  <p>{v.views} переглядів · {new Date(v.datePosted).toLocaleDateString('uk')}</p>
-                </div>
-                <div className="vacancy-match">{v.match}%</div>
-              </div>
-            ))
-          : <p className="no-vacancies">Вакансій не знайдено</p>
-        }
-      </main>
+          {filteredVacancies.length > 0 ? (
+            filteredVacancies.map(vacancy => {
+              // Find the company data for this vacancy
+              const companyData = testCompanies.find(company => company.ID === vacancy.Host_id);
+              
+              return (
+                <VacancyBox 
+                  key={vacancy.ID} 
+                  vacancy={vacancy} 
+                  companyData={companyData} 
+                />
+              );
+            })
+          ) : (
+            <p className="no-vacancies">Вакансій не знайдено</p>
+          )}
+        </main>
       </div>
     </div>
   );
