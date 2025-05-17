@@ -8,14 +8,11 @@ import Navbar from './components/Navbar';
 import Login from './components/Login';
 import ProfilePage from './components/ProfilePage';
 import VacanciesPage from './pages/VacanciesPage';
+import MaterialsPage from './pages/MaterialsPage';
+import HistoryPage from './pages/HistoryPage';
+import CandidatesPage from './pages/CandidatesPage';
+import ResponsesPage from './pages/ResponsesPage';
 
-
-
-
-const HistoryPage = () => <div>Історія відгуків</div>;
-const MaterialsPage = () => <div>Корисні матеріали</div>;
-const CandidatesPage = () => <div>Кандидати</div>;
-const ResponsesPage = () => <div>Відгуки кандидатів</div>;
 
 function App() {
   const [user, setUser] = useState(null);
