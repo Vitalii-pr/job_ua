@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import companyLogo from '/public/company_logo.svg';
-import companyLogoText from '/public/company_logo_text.svg';
+import companyLogo from '/company_logo.svg';
+import companyLogoText from '/company_logo_text.svg';
 
 const Navbar = ({ userType = 'employee', onPageChange }) => {
   const [activeTab, setActiveTab] = useState('Вакансії');

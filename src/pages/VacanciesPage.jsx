@@ -372,6 +372,16 @@ const VacanciesPage = () => {
     });
   };
 
+  const handleVacancyClick = (vacancyId) => {
+    // For now, just log the click since navigation isn't set up
+    console.log(`Navigating to vacancy details for ID: ${vacancyId}`);
+    // In a real application, you would navigate to the vacancy details page
+    // navigate(`/vacancy/${vacancyId}`);
+    
+    // You could also show a modal with vacancy details
+    alert(`Clicked on vacancy ${vacancyId}. This would navigate to the vacancy details page.`);
+  };
+
   const filteredVacancies = useMemo(() => {
     return testVacancies.filter(vacancy => {
       // Search query filter
@@ -631,6 +641,7 @@ const VacanciesPage = () => {
                   key={vacancy.ID} 
                   vacancy={vacancy} 
                   companyData={companyData} 
+                  onVacancyClick={handleVacancyClick}
                 />
               );
             })

@@ -18,7 +18,16 @@ const currentUser = {
 // Exchange rate USD to UAH (approximate)
 const USD_TO_UAH = 38;
 
-const VacancyBox = ({ vacancy, companyData }) => {
+const VacancyBox = ({ vacancy, companyData, onVacancyClick }) => {
+  // Handle click on vacancy box
+  const handleVacancyClick = () => {
+    // Call the provided click handler with the vacancy ID
+    if (onVacancyClick) {
+      onVacancyClick(vacancy.ID);
+    }
+    // For now, just log the click since navigation isn't set up
+    console.log(`Clicked on vacancy ${vacancy.ID}`);
+  };
   // Helper function to format the date (e.g., "25 жовтня")
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -179,12 +188,12 @@ const VacancyBox = ({ vacancy, companyData }) => {
   };
 
   return (
-    <div className="vacancy-box">
+    <div className="vacancy-box" onClick={handleVacancyClick} role="button" tabIndex={0}>
       <div className="vacancy-inner-box">
         {/* Company Logo */}
         <div className="company-logo">
           {companyData.Photo ? (
-            <img src={`/public/${companyData.Photo}`} alt={`${companyData.Name} logo`} width="64" height="64" />
+            <img src={`/${companyData.Photo}`} alt={`${companyData.Name} logo`} width="64" height="64" />
           ) : (
             <div className="placeholder-logo">{companyData.Name.charAt(0)}</div>
           )}
