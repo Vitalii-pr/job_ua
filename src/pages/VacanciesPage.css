@@ -267,7 +267,7 @@
 }
 
 .filters-sidebar input[type="checkbox"] {
-  / remove browser default styling */
+  /* remove browser default styling */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
