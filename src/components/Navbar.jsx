@@ -47,8 +47,7 @@ const Navbar = ({ userType = 'employee' }) => {
             <button
               key={item.id}
               onClick={() => handleNavigation(item)}
-              className={`
-                bg-transparent text-white border-none font-bold cursor-pointer
+              className={`text-white border-none font-bold cursor-pointer
                 flex items-center justify-center h-full px-[20px] relative box-border m-0
                 select-none border-l border-l-[rgba(255,255,255,0.1)]
                 ${activeTab === item.label ? 'bg-[#84112D]' : ''}
