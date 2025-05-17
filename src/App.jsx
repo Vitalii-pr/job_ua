@@ -1,16 +1,26 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './firebase';
+
+import Navbar from './components/Navbar';
 import Login from './components/Login';
 import ProfilePage from './components/ProfilePage';
+import VacanciesPage from './pages/VacanciesPage';
+
+
+
+
+const HistoryPage = () => <div>Історія відгуків</div>;
+const MaterialsPage = () => <div>Корисні матеріали</div>;
+const CandidatesPage = () => <div>Кандидати</div>;
+const ResponsesPage = () => <div>Відгуки кандидатів</div>;
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [userType, setUserType] = useState('employee');
-  const [activePage, setActivePage] = useState('Вакансії');
+  const [userType, setUserType] = useState('employee'); // Or 'employer'
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -25,26 +35,12 @@ function App() {
     setUser(userData);
   };
 
-  const handlePageChange = (pageName) => {
-    setActivePage(pageName);
-  };
-
   const handleLogout = async () => {
     try {
       await signOut(auth);
       setUser(null);
-      setActivePage('Вакансії');
     } catch (error) {
       console.error('Error signing out:', error);
-    }
-  };
-
-  const renderActivePage = () => {
-    switch (activePage) {
-      case 'Мій профіль':
-        return <ProfilePage user={user} />;
-      default:
-        return <div>{activePage}</div>;
     }
   };
 
@@ -61,17 +57,36 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <Navbar 
-        userType={userType} 
-        onPageChange={handlePageChange} 
-        user={user}
-        onLogout={handleLogout}
-      />
-      <main className="main-content">
-        {renderActivePage()}
-      </main>
-    </div>
+    <Router>
+      <div className="app">
+        <Navbar 
+          userType={userType} 
+          user={user}
+          onLogout={handleLogout}
+        />
+        <main className="main-content">
+          <Routes>
+            {userType === 'employee' ? (
+              <>
+                <Route path="/vacancies" element={<VacanciesPage />} />
+                <Route path="/history" element={<HistoryPage />} />
+                <Route path="/materials" element={<MaterialsPage />} />
+                <Route path="/profile" element={<ProfilePage user={user} />} />
+                <Route path="*" element={<Navigate to="/vacancies" />} />
+              </>
+            ) : (
+              <>
+                <Route path="/vacancies" element={<VacanciesPage />} />
+                <Route path="/candidates" element={<CandidatesPage />} />
+                <Route path="/responses" element={<ResponsesPage />} />
+                <Route path="/profile" element={<ProfilePage user={user} />} />
+                <Route path="*" element={<Navigate to="/vacancies" />} />
+              </>
+            )}
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 

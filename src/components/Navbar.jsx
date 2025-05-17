@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import companyLogo from '/public/company_logo.svg';
 import companyLogoText from '/public/company_logo_text.svg';
 
-const Navbar = ({ userType = 'employee', onPageChange }) => {
-  const [activeTab, setActiveTab] = useState('Вакансії');
+const Navbar = ({ userType = 'employee' }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState('');
 
   const navItems = userType === 'employee' 
     ? [
@@ -19,11 +22,14 @@ const Navbar = ({ userType = 'employee', onPageChange }) => {
         { id: 'profile', label: 'Мій профіль', hasChevron: true, path: '/profile' },
       ];
 
+  useEffect(() => {
+    const current = navItems.find(item => item.path === location.pathname);
+    if (current) setActiveTab(current.label);
+  }, [location.pathname]);
+
   const handleNavigation = (item) => {
     setActiveTab(item.label);
-    if (onPageChange) {
-      onPageChange(item.label);
-    }
+    navigate(item.path);
   };
 
   return (
@@ -31,16 +37,8 @@ const Navbar = ({ userType = 'employee', onPageChange }) => {
       <div className="w-[90%] flex justify-between items-center h-full">
         {/* Logo */}
         <div className="flex items-center h-full">
-          <img 
-            src={companyLogo} 
-            alt="Company Logo" 
-            className="h-full object-contain" 
-          />
-          <img 
-            src={companyLogoText} 
-            alt="Company Name" 
-            className="ml-[5px] h-full object-contain" 
-          />
+          <img src={companyLogo} alt="Company Logo" className="h-full object-contain" />
+          <img src={companyLogoText} alt="Company Name" className="ml-[5px] h-full object-contain" />
         </div>
 
         {/* Navigation Links */}
@@ -55,7 +53,6 @@ const Navbar = ({ userType = 'employee', onPageChange }) => {
                 select-none border-l border-l-[rgba(255,255,255,0.1)]
                 ${activeTab === item.label ? 'bg-[#84112D]' : ''}
                 ${item.id === 'profile' ? 'justify-start' : ''}
-                focus:outline-none focus:ring-0 active:outline-none active:ring-0
               `}
               style={{ fontFamily: "'Fira Sans', sans-serif" }}
             >
