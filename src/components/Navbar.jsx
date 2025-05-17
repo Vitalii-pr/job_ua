@@ -39,7 +39,7 @@ const Navbar = ({ userType = 'employee', onPageChange }) => {
           {navItems.map((item) => (
             <button
               key={item.id}
-              className={`nav-button ${activeTab === item.label ? 'active' : ''}`}
+              className={`nav-button ${activeTab === item.label ? 'active' : ''} ${item.id === 'profile' ? 'profile' : ''}`}
               onClick={() => handleNavigation(item)}
             >
               <span className="nav-button-text">{item.label}</span>
