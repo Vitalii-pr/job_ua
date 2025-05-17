@@ -185,7 +185,20 @@ const testVacancies = [
 ];
 
 const VacanciesPage = () => {
-  // Search & filter state
+  // Current filter state
+  const [currentFilters, setCurrentFilters] = useState({
+    searchQuery: '',
+    specialization: '',
+    sortBy: '',
+    employmentTypes: { full: false, part: false, project: false, intern: false },
+    formats: { remote: false, hybrid: false, office: false },
+    level: '',
+    countryCity: '',
+    salaryMin: 0,
+    englishLevel: ''
+  });
+
+  // Temporary filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [specialization, setSpecialization] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -201,6 +214,7 @@ const VacanciesPage = () => {
   };
 
   const handleReset = () => {
+    // Reset temporary state
     setSearchQuery('');
     setSpecialization('');
     setSortBy('');
@@ -210,60 +224,83 @@ const VacanciesPage = () => {
     setCountryCity('');
     setSalaryMin(0);
     setEnglishLevel('');
+    
+    // Reset current filters
+    setCurrentFilters({
+      searchQuery: '',
+      specialization: '',
+      sortBy: '',
+      employmentTypes: { full: false, part: false, project: false, intern: false },
+      formats: { remote: false, hybrid: false, office: false },
+      level: '',
+      countryCity: '',
+      salaryMin: 0,
+      englishLevel: ''
+    });
   };
 
   const handleApply = () => {
-    // Filtering is handled automatically through useMemo
-    console.log('Filters applied:', { searchQuery, specialization, sortBy, employmentTypes, formats, level, countryCity, salaryMin, englishLevel });
+    // Apply current filters
+    setCurrentFilters({
+      searchQuery,
+      specialization,
+      sortBy,
+      employmentTypes,
+      formats,
+      level,
+      countryCity,
+      salaryMin,
+      englishLevel
+    });
   };
 
   const filteredVacancies = useMemo(() => {
     return testVacancies.filter(vacancy => {
       // Search query filter
-      if (searchQuery && !vacancy.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+      if (currentFilters.searchQuery && !vacancy.title.toLowerCase().includes(currentFilters.searchQuery.toLowerCase())) {
         return false;
       }
 
       // Specialization filter
-      if (specialization && vacancy.specialization !== specialization) {
+      if (currentFilters.specialization && vacancy.specialization !== currentFilters.specialization) {
         return false;
       }
 
       // Employment type filter
-      if (Object.values(employmentTypes).some(v => v)) {
-        const matchesType = employmentTypes[vacancy.employmentType];
+      if (Object.values(currentFilters.employmentTypes).some(v => v)) {
+        const matchesType = currentFilters.employmentTypes[vacancy.employmentType];
         if (!matchesType) return false;
       }
 
       // Format filter
-      if (Object.values(formats).some(v => v)) {
-        const matchesFormat = formats[vacancy.format];
+      if (Object.values(currentFilters.formats).some(v => v)) {
+        const matchesFormat = currentFilters.formats[vacancy.format];
         if (!matchesFormat) return false;
       }
 
       // Level filter
-      if (level && vacancy.level !== level) {
+      if (currentFilters.level && vacancy.level !== currentFilters.level) {
         return false;
       }
 
       // Location filter
-      if (countryCity && vacancy.location !== countryCity) {
+      if (currentFilters.countryCity && vacancy.location !== currentFilters.countryCity) {
         return false;
       }
 
       // Salary filter
-      if (salaryMin > 0 && vacancy.salary < salaryMin) {
+      if (currentFilters.salaryMin > 0 && vacancy.salary < currentFilters.salaryMin) {
         return false;
       }
 
       // English level filter
-      if (englishLevel && vacancy.englishLevel !== englishLevel) {
+      if (currentFilters.englishLevel && vacancy.englishLevel !== currentFilters.englishLevel) {
         return false;
       }
 
       return true;
     }).sort((a, b) => {
-      switch (sortBy) {
+      switch (currentFilters.sortBy) {
         case 'salary':
           return b.salary - a.salary;
         case 'date':
@@ -274,7 +311,7 @@ const VacanciesPage = () => {
           return 0;
       }
     });
-  }, [searchQuery, specialization, sortBy, employmentTypes, formats, level, countryCity, salaryMin, englishLevel]);
+  }, [currentFilters]);
 
   return (
     <div className="vacancies-container">
@@ -286,7 +323,7 @@ const VacanciesPage = () => {
             <div className="search-input-container">
               {/* Search input */}
               <div className="search-field">
-                <svg className="search-icon" width="24" height="24" viewBox="0 0 24 24">
+                <svg className="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 <input
@@ -312,7 +349,7 @@ const VacanciesPage = () => {
                   <option value="finance">Фінанси</option>
                   <option value="hr">HR</option>
                 </select>
-                <svg className="chevron-down" width="19.2" height="9.6" viewBox="0 0 19.2 9.6">
+                <svg className="chevron-down" width="19.2" height="9.6" viewBox="0 0 19.2 9.6" fill="none">
                   <path d="M1 1L9.6 8L18.2 1" stroke="#84112D" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
               </div>
@@ -334,11 +371,11 @@ const VacanciesPage = () => {
             <div className="select-wrapper">
               <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
                 <option value="">Вибрати</option>
-                <option value="match_desc">Сумісність</option>
-                <option value="date_desc">Дата: нові</option>
-                <option value="salary_desc">Зарплата: висока</option>
+                <option value="date">За датою</option>
+                <option value="salary">За зарплатою</option>
+                <option value="views">За переглядами</option>
               </select>
-              <svg className="chevron-down" width="12" height="6" viewBox="0 0 12 6">
+              <svg className="chevron-down" width="12" height="6" viewBox="0 0 12 6" fill="none">
                 <path d="M1 1L6 5L11 1" stroke="#84112D" strokeWidth="2" strokeLinecap="round"/>
               </svg>
             </div>
@@ -370,21 +407,23 @@ const VacanciesPage = () => {
                 <option value="middle">Middle</option>
                 <option value="senior">Senior</option>
               </select>
-              <svg className="chevron-down" width="12" height="6" viewBox="0 0 12 6">
-                <path d="M1 1L6 5L11 1" stroke="#84112D" strokeWidth="2"/></svg>
+              <svg className="chevron-down" width="12" height="6" viewBox="0 0 12 6" fill="none">
+                <path d="M1 1L6 5L11 1" stroke="#84112D" strokeWidth="2" strokeLinecap="round"/></svg>
             </div>
 
             {/* Country, City */}
             <p className="subheading">Країна, місто</p>
-            <div className="select-wrapper small">
-              <select value={countryCity} onChange={e => setCountryCity(e.target.value)}>
-                <option value="">Вибрати</option>
-                <option value="lviv">Львів</option>
-                <option value="kyiv">Київ</option>
-                <option value="online">Україна</option>
-              </select>
-              <svg className="chevron-down" width="12" height="6" viewBox="0 0 12 6">
-                <path d="M1 1L6 5L11 1" stroke="#84112D" strokeWidth="2"/></svg>
+            <div className="search-field small">
+              <svg className="search-icon red" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#84112D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Введіть місто"
+                value={countryCity}
+                onChange={e => setCountryCity(e.target.value)}
+              />
             </div>
 
             {/* Salary expectations */}
@@ -398,7 +437,7 @@ const VacanciesPage = () => {
               value={salaryMin}
               onChange={e => setSalaryMin(parseInt(e.target.value))}
               style={{
-                background: `linear-gradient(to right, #2e7dff 0%, #2e7dff ${(salaryMin/100000)*100}%, #e0e0e0 ${(salaryMin/100000)*100}%, #e0e0e0 100%)`
+                background: `linear-gradient(to right, #84112D 0%, #84112D ${(salaryMin/100000)*100}%, #e0e0e0 ${(salaryMin/100000)*100}%, #e0e0e0 100%)`
               }}
             />
             <div className="salary-values">від {salaryMin.toLocaleString()}₴</div>
@@ -413,8 +452,8 @@ const VacanciesPage = () => {
                 <option value="upper">Upper-Intermediate</option>
                 <option value="advanced">Advanced</option>
               </select>
-              <svg className="chevron-down" width="12" height="6" viewBox="0 0 12 6">
-                <path d="M1 1L6 5L11 1" stroke="#84112D" strokeWidth="2"/></svg>
+              <svg className="chevron-down" width="12" height="6" viewBox="0 0 12 6" fill="none">
+                <path d="M1 1L6 5L11 1" stroke="#84112D" strokeWidth="2" strokeLinecap="round"/></svg>
             </div>
 
             {/* Actions */}
