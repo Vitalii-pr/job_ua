@@ -27,6 +27,59 @@
   border-radius: 4px;
 }
 
+/* Compatibility box */
+.compatibility-box {
+  width: 67px;
+  height: 176px;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.compatibility-percentage {
+  width: 67px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.compatibility-percentage span {
+  font-size: 36px;
+  font-weight: bold;
+  color: #84112D;
+  line-height: 25px;
+}
+
+.compatibility-label {
+  width: 67px;
+  height: 10px;
+  margin-top: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.compatibility-label span {
+  font-size: 10px;
+  color: #666;
+  text-align: center;
+}
+
+.placeholder-logo {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #84112D;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
 .company-logo img {
   width: 100%;
   height: 100%;
@@ -45,7 +98,13 @@
   width: 757px;
   height: 64px;
   display: flex;
+  justify-content: space-between;
+}
+
+.vacancy-header-content {
+  display: flex;
   flex-direction: column;
+  width: 670px;
 }
 
 .vacancy-title {
@@ -81,13 +140,16 @@
 
 .vacancy-description {
   width: 757px;
-  height: 68px;
+  height: 42px;
+  font-size: 14px;
+  margin-top: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
+  line-height: 1.5;
 }
 
 .vacancy-metadata {
@@ -98,6 +160,36 @@
   align-items: center;
   color: #888;
   font-size: 14px;
+}
+
+.vacancy-metadata-details {
+  width: 757px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.metadata-separator {
+  margin: 0 10px;
+  color: #666;
+  font-size: 10px;
+}
+
+/* Highlighting for matching user preferences */
+.highlight-match {
+  color: #84112D;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.no-match {
+  color: #666;
+  font-size: 18px;
+  font-weight: normal;
 }
 
 .views-count {

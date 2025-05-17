@@ -2,6 +2,124 @@ import React, { useState, useMemo } from 'react';
 import './VacanciesPage.css';
 import VacancyBox from '../components/VacancyBox';
 
+// Default user data (ID: 1)
+const currentUser = {
+  ID: 1,
+  Position: 'UI UX Designer',
+  Qualification: 'Junior',
+  Employment_type: 'Часткова зайнятість, Проектна робота, Стажування',
+  Work_format: 'Віддалена, Віддалена/офіс',
+  City: 'Львів',
+  Moving_posibility: false,
+  Desired_pay: 600, // in USD
+  English_lvl: 'Intermediate',
+  Skills: 'Figma 4, UI/UX 3, Prototyping 3, Product design 3, Wireframing 4, Тестування 2, Дослідження користувачів 2, Responsive design 2, Інформаційна архітектура 3, Adobe Photoshop 4, Adobe Illustrator 4'
+};
+
+// Exchange rate USD to UAH (approximate)
+const USD_TO_UAH = 40;
+
+// Helper function to check employment type equivalence
+const checkEmploymentTypeMatch = (userTypes, vacancyType) => {
+  // Handle equivalence between "Неповна зайнятість" and "Часткова зайнятість"
+  if (vacancyType === 'Неповна зайнятість' && 
+      userTypes.includes('Часткова зайнятість')) {
+    return true;
+  }
+  return userTypes.includes(vacancyType);
+};
+
+// Helper function to check skills match
+const checkSkillsMatch = (userSkills, vacancySkills) => {
+  if (!userSkills || !vacancySkills) return [];
+  
+  // Extract skill names from user skills (ignore numbers)
+  const userSkillNames = userSkills.split(', ')
+    .map(skill => skill.split(' ')[0].trim().toLowerCase());
+  
+  // Parse vacancy skills with their priorities
+  const vacancySkillsWithPriority = vacancySkills.split(', ')
+    .map(skill => {
+      const parts = skill.split(' ');
+      return {
+        name: parts[0].trim().toLowerCase(),
+        priority: parseInt(parts[1] || '0', 10)
+      };
+    })
+    .filter(skill => skill.priority > 0); // Only include skills with priority > 0
+  
+  // Find matching skills - only check for skills required by the vacancy
+  return vacancySkillsWithPriority
+    .filter(skill => userSkillNames.includes(skill.name))
+    .map(skill => skill.name);
+};
+
+// Calculate compatibility percentage between user and vacancy
+const calculateCompatibilityPercentage = (user, vacancy) => {
+  // Check if attributes match user preferences
+  const matchesUserPreferences = {
+    // Salary check - convert user's desired pay from USD to UAH
+    // If vacancy salary is greater than user's desired pay, it's a match
+    salary: vacancy.Payrate >= (user.Desired_pay * USD_TO_UAH),
+    
+    // Position check
+    position: vacancy.Position === user.Position,
+    
+    // Qualification check
+    qualification: vacancy.Qualification === user.Qualification,
+    
+    // Work format check
+    workFormat: user.Work_format.includes(vacancy.Work_format),
+    
+    // Employment type check
+    workType: checkEmploymentTypeMatch(user.Employment_type, vacancy.Work_type),
+    
+    // Location check - "Світ" matches with everything
+    // If vacancy location is a country and user's city is in that country, it's a match
+    workPlace: vacancy.Work_place === 'Світ' || 
+              user.City === vacancy.Work_place || 
+              (user.City === 'Львів' && vacancy.Work_place === 'Україна') || 
+              (user.Moving_posibility && vacancy.Work_place !== 'Світ'),
+    
+    // English level check
+    englishLevel: vacancy.English_lvl === user.English_lvl
+  };
+  
+  // Get matching skills
+  const matchingSkills = checkSkillsMatch(user.Skills, vacancy.Skills);
+  
+  // Parse vacancy skills with their priorities to count only skills with priority > 0
+  const relevantVacancySkills = vacancy.Skills ? 
+    vacancy.Skills.split(', ')
+      .map(skill => {
+        const parts = skill.split(' ');
+        return {
+          name: parts[0].trim().toLowerCase(),
+          priority: parseInt(parts[1] || '0', 10)
+        };
+      })
+      .filter(skill => skill.priority > 0) : [];
+  
+  // Count all fields to check (7 basic fields + relevant skills)
+  const totalFields = 7 + relevantVacancySkills.length; // 7 basic fields + skills with priority > 0
+  
+  // Count matches
+  let matches = 0;
+  if (matchesUserPreferences.salary) matches++;
+  if (matchesUserPreferences.position) matches++;
+  if (matchesUserPreferences.qualification) matches++;
+  if (matchesUserPreferences.workFormat) matches++;
+  if (matchesUserPreferences.workType) matches++;
+  if (matchesUserPreferences.workPlace) matches++;
+  if (matchesUserPreferences.englishLevel) matches++;
+  
+  // Add matching skills
+  matches += matchingSkills.length;
+  
+  // Calculate percentage
+  return Math.round((matches / totalFields) * 100);
+};
+
 // Test company data to match the structure in user.txt
 const testCompanies = [
   {
@@ -189,7 +307,7 @@ const VacanciesPage = () => {
   const [currentFilters, setCurrentFilters] = useState({
     searchQuery: '',
     specialization: '',
-    sortBy: '',
+    sortBy: 'matching',
     employmentTypes: { full: false, part: false, project: false, intern: false },
     formats: { remote: false, hybrid: false, office: false },
     level: '',
@@ -201,7 +319,7 @@ const VacanciesPage = () => {
   // Temporary filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [specialization, setSpecialization] = useState('');
-  const [sortBy, setSortBy] = useState('');
+  const [sortBy, setSortBy] = useState('matching');
   const [employmentTypes, setEmploymentTypes] = useState({ full: false, part: false, project: false, intern: false });
   const [formats, setFormats] = useState({ remote: false, hybrid: false, office: false });
   const [level, setLevel] = useState('');
@@ -217,7 +335,7 @@ const VacanciesPage = () => {
     // Reset temporary state
     setSearchQuery('');
     setSpecialization('');
-    setSortBy('');
+    setSortBy('matching');
     setEmploymentTypes({ full: false, part: false, project: false, intern: false });
     setFormats({ remote: false, hybrid: false, office: false });
     setLevel('');
@@ -229,7 +347,7 @@ const VacanciesPage = () => {
     setCurrentFilters({
       searchQuery: '',
       specialization: '',
-      sortBy: '',
+      sortBy: 'matching',
       employmentTypes: { full: false, part: false, project: false, intern: false },
       formats: { remote: false, hybrid: false, office: false },
       level: '',
@@ -257,56 +375,88 @@ const VacanciesPage = () => {
   const filteredVacancies = useMemo(() => {
     return testVacancies.filter(vacancy => {
       // Search query filter
-      if (currentFilters.searchQuery && !vacancy.title.toLowerCase().includes(currentFilters.searchQuery.toLowerCase())) {
+      if (currentFilters.searchQuery && !vacancy.Title.toLowerCase().includes(currentFilters.searchQuery.toLowerCase())) {
         return false;
       }
 
       // Specialization filter
-      if (currentFilters.specialization && vacancy.specialization !== currentFilters.specialization) {
+      if (currentFilters.specialization && vacancy.Position !== currentFilters.specialization) {
         return false;
       }
 
       // Employment type filter
       if (Object.values(currentFilters.employmentTypes).some(v => v)) {
-        const matchesType = currentFilters.employmentTypes[vacancy.employmentType];
-        if (!matchesType) return false;
+        // Map the employment types to match the Work_type field
+        const employmentTypeMap = {
+          full: 'Повна зайнятість',
+          part: 'Неповна зайнятість',
+          project: 'Проектна робота',
+          intern: 'Стажування'
+        };
+        
+        // Check if any of the selected employment types match the vacancy's Work_type
+        const matchesType = Object.keys(currentFilters.employmentTypes)
+          .some(key => currentFilters.employmentTypes[key] && vacancy.Work_type === employmentTypeMap[key]);
+        
+        if (!matchesType && Object.values(currentFilters.employmentTypes).some(v => v)) {
+          return false;
+        }
       }
 
       // Format filter
       if (Object.values(currentFilters.formats).some(v => v)) {
-        const matchesFormat = currentFilters.formats[vacancy.format];
-        if (!matchesFormat) return false;
+        // Map the format types to match the Work_format field
+        const formatMap = {
+          remote: 'Віддалена',
+          hybrid: 'Віддалена/офіс',
+          office: 'Офіс'
+        };
+        
+        // Check if any of the selected formats match the vacancy's Work_format
+        const matchesFormat = Object.keys(currentFilters.formats)
+          .some(key => currentFilters.formats[key] && vacancy.Work_format === formatMap[key]);
+        
+        if (!matchesFormat && Object.values(currentFilters.formats).some(v => v)) {
+          return false;
+        }
       }
 
       // Level filter
-      if (currentFilters.level && vacancy.level !== currentFilters.level) {
+      if (currentFilters.level && vacancy.Qualification.toLowerCase() !== currentFilters.level.toLowerCase()) {
         return false;
       }
 
       // Location filter
-      if (currentFilters.countryCity && vacancy.location !== currentFilters.countryCity) {
+      if (currentFilters.countryCity && 
+          !vacancy.Work_place.toLowerCase().includes(currentFilters.countryCity.toLowerCase())) {
         return false;
       }
 
       // Salary filter
-      if (currentFilters.salaryMin > 0 && vacancy.salary < currentFilters.salaryMin) {
+      if (currentFilters.salaryMin > 0 && vacancy.Payrate < currentFilters.salaryMin) {
         return false;
       }
 
       // English level filter
-      if (currentFilters.englishLevel && vacancy.englishLevel !== currentFilters.englishLevel) {
+      if (currentFilters.englishLevel && 
+          vacancy.English_lvl.toLowerCase() !== currentFilters.englishLevel.toLowerCase()) {
         return false;
       }
 
       return true;
-    }).sort((a, b) => {
+    }).map(vacancy => ({
+      ...vacancy,
+      compatibilityPercentage: calculateCompatibilityPercentage(currentUser, vacancy)
+    })).sort((a, b) => {
       switch (currentFilters.sortBy) {
+        case 'matching':
+          return b.compatibilityPercentage - a.compatibilityPercentage;
         case 'salary':
-          return b.salary - a.salary;
+          return b.Payrate - a.Payrate;
         case 'date':
-          return new Date(b.datePosted) - new Date(a.datePosted);
+          return new Date(b.Created_at) - new Date(a.Created_at);
         case 'views':
-          return b.views - a.views;
+          return b.Wieved - a.Wieved;
         default:
           return 0;
       }
@@ -319,7 +469,10 @@ const VacanciesPage = () => {
       <div className="search-header-box">
         <div className="search-box">
           <h2 className="search-title">Шукати вакансії</h2>
-          <form className="search-form" onSubmit={e => e.preventDefault()}>
+          <form className="search-form" onSubmit={e => {
+            e.preventDefault();
+            handleApply();
+          }}>
             <div className="search-input-container">
               {/* Search input */}
               <div className="search-field">
@@ -343,6 +496,8 @@ const VacanciesPage = () => {
                   onChange={e => setSpecialization(e.target.value)}
                 >
                   <option value="" disabled>Спеціалізація</option>
+                  <option value="UI UX Designer">UI/UX Дизайн</option>
+                  <option value="Motion Designer">Motion Дизайн</option>
                   <option value="it">IT</option>
                   <option value="marketing">Маркетинг</option>
                   <option value="sales">Продажі</option>
@@ -355,7 +510,7 @@ const VacanciesPage = () => {
               </div>
 
               {/* Search button */}
-              <button className="search-button">Пошук</button>
+              <button type="submit" className="search-button">Пошук</button>
             </div>
           </form>
         </div>
