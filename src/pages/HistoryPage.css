@@ -1,15 +1,75 @@
-.history-container {
-  padding: 20px;
+.history-page {
+  font-family: 'Fira Sans', sans-serif;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #F5F5F5;
+}
+
+.history-content {
+  width: 1088px;
   max-width: 90%;
   margin: 0 auto;
+  padding-top: 40px; /* 40px below the navbar */
 }
 
-h1 {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 700;
-  margin-bottom: 20px;
+.history-title {
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: #000000;
+  text-align: center;
 }
 
-p {
-  font-family: 'Fira Sans', sans-serif;
+.section-title {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #333333;
+  text-align: center;
+}
+
+.disliked-vacancies-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.vacancies-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.no-vacancies {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+}
+
+.no-vacancies p {
+  font-size: 16px;
+  color: #666666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .history-content {
+    padding-top: 30px;
+  }
+  
+  .history-title {
+    font-size: 24px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
 }
