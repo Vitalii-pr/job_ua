@@ -70,11 +70,10 @@
 .search-title {
   margin: 0 0 12px 0;
   font-size: 32px;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 700;
+  color: #000000;
   display: block;
   width: 50%;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .materials-search {
