@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import RecommendationDialog from '../components/RecommendationModal';
+import { useAuth } from '../contexts/AuthContext';
 
-const ProfilePage = ({ user, onLogout }) => {
+const ProfilePage = () => {
+  const { currentUser, logout, loading: authLoading } = useAuth(); 
   const [profile, setProfile] = useState({
     name: '',
     surname: '',
@@ -49,14 +51,19 @@ const ProfilePage = ({ user, onLogout }) => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (user?.uid) {
-        const userRef = doc(db, 'user_table', user.uid);
+      if (currentUser?.uid) {
+        const userRef = doc(db, 'user_table', currentUser.uid);
         const docSnap = await getDoc(userRef);
         
         if (docSnap.exists()) {
           setProfile(prevProfile => ({
             ...prevProfile,
-            ...docSnap.data()
+            ...docSnap.data(),
+            contacts: {
+              ...prevProfile.contacts,
+              ...docSnap.data().contacts,
+              email: docSnap.data().contacts?.email || currentUser.email || ''
+            }
           }));
         }
         setLoading(false);
@@ -64,12 +71,12 @@ const ProfilePage = ({ user, onLogout }) => {
     };
 
     fetchProfile();
-  }, [user]);
+  }, [currentUser]); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userRef = doc(db, 'user_table', user.uid);
+      const userRef = doc(db, 'user_table', currentUser.uid);
       await updateDoc(userRef, {
         ...profile,
         updated_at: new Date()
@@ -151,7 +158,7 @@ const ProfilePage = ({ user, onLogout }) => {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="w-10 h-10 border-4 border-purple-200 border-t-purple-700 rounded-full animate-spin"></div>
@@ -164,17 +171,17 @@ const ProfilePage = ({ user, onLogout }) => {
       {/* Sidebar */}
       <div className="w-64 bg-white border-r border-gray-200 p-4">
         <div onClick={() => setActiveView('profile')} className={`p-3 rounded-lg text-gray-700 font-medium hover:bg-gray-100 cursor-pointer mb-1 ${
-    activeView === 'profile' ? 'bg-gray-100 text-purple-800 border-l-4 border-purple-800' : ''
+    activeView === 'profile' ? 'bg-gray-100 text-[#84112D] border-l-4 border-[#84112D]' : ''
   }`}>
           Мій профіль
         </div>
         <div onClick={() => setActiveView('contacts')} className={`p-3 rounded-lg text-gray-700 font-medium hover:bg-gray-100 cursor-pointer mb-1 ${
-    activeView === 'contacts' ? 'bg-gray-100 text-purple-800 border-l-4 border-purple-800' : ''
+    activeView === 'contacts' ? 'bg-gray-100 text-[#84112D] border-l-4 border-[#84112D]' : ''
   }`}>
           Контакти
         </div>
         <div onClick={() => setActiveView('notifications')} className={`p-3 rounded-lg text-gray-700 font-medium hover:bg-gray-100 cursor-pointer ${
-    activeView === 'notifications' ? 'bg-gray-100 text-purple-800 border-l-4 border-purple-800' : ''
+    activeView === 'notifications' ? 'bg-gray-100 text-[#84112D] border-l-4 border-[#84112D]' : ''
   }`}>
           Оповіщення
         </div>
@@ -696,7 +703,7 @@ const ProfilePage = ({ user, onLogout }) => {
               <div className="p-2">
                 <button
                   onClick={() => setIsOpen(true)}
-                  className="rounded-md bg-[#84112D] px-6 py-2 text-white hover:bg-purple-800 text-sm font-medium"
+                  className="rounded-md bg-[#84112D] px-6 py-2 text-white hover:bg-[#84112F] text-sm font-medium"
                 >
                   Запросити рекомендацію
                 </button>
@@ -717,7 +724,7 @@ const ProfilePage = ({ user, onLogout }) => {
             <div className="flex gap-4">
             <button 
                 type="button" 
-                onClick={onLogout}
+                onClick={logout}
                 className="px-6 py-2 bg-red-700 text-white rounded-md hover:bg-red-800 font-medium"
               >
                 Вийти

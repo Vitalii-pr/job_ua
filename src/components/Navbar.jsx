@@ -7,6 +7,8 @@ const Navbar = ({ userType = 'employee' }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const navItems = userType === 'employee' 
     ? [
@@ -25,24 +27,35 @@ const Navbar = ({ userType = 'employee' }) => {
   useEffect(() => {
     const current = navItems.find(item => item.path === location.pathname);
     if (current) setActiveTab(current.label);
+    
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (windowWidth > 768) {
+      setIsMobileMenuOpen(false);
+    }
+  }, [windowWidth]);
 
   const handleNavigation = (item) => {
     setActiveTab(item.label);
     navigate(item.path);
+    setIsMobileMenuOpen(false);
   };
 
   return (
     <div className="w-full bg-black flex justify-center h-[60px]" style={{ fontFamily: "'Fira Sans', sans-serif" }}>
       <div className="w-[90%] flex justify-between items-center h-full">
         {/* Logo */}
-        <div className="flex items-center h-full">
+        <div className="flex items-center h-[40px]">
           <img src={companyLogo} alt="Company Logo" className="h-full object-contain" />
-          <img src={companyLogoText} alt="Company Name" className="ml-[5px] h-full object-contain" />
+          <img src={companyLogoText} alt="Company Name" className="ml-[5px] h-full object-contain hidden md:block" />
         </div>
 
-        {/* Navigation Links */}
-        <div className="flex h-full gap-[2px]">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex h-full gap-[2px]">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -82,6 +95,62 @@ const Navbar = ({ userType = 'employee' }) => {
             </button>
           ))}
         </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden text-white focus:outline-none"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="absolute top-[60px] left-0 right-0 bg-black z-50 md:hidden">
+            <div className="flex flex-col">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavigation(item)}
+                  className={`text-white border-none font-bold cursor-pointer
+                    flex items-center justify-between h-14 px-6 relative box-border
+                    border-t border-t-[rgba(255,255,255,0.1)]
+                    ${activeTab === item.label ? 'bg-[#84112D]' : ''}
+                  `}
+                  style={{ fontFamily: "'Fira Sans', sans-serif" }}
+                >
+                  <span className="text-[15px]">
+                    {item.label}
+                  </span>
+                  {item.hasChevron && (
+                    <svg
+                      width="12.8"
+                      height="6.4"
+                      viewBox="0 0 12.8 6.4"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="transform rotate-90"
+                      stroke="white"
+                    >
+                      <path
+                        d="M1 1L6.4 5.4L11.8 1"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

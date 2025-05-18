@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from './firebase';
+import { useAuth } from './contexts/AuthContext';
 
 import Navbar from './components/Navbar';
 import Login from './components/Login';
@@ -12,34 +10,10 @@ import MaterialsPage from './pages/MaterialsPage';
 import HistoryPage from './pages/HistoryPage';
 import CandidatesPage from './pages/CandidatesPage';
 import ResponsesPage from './pages/ResponsesPage';
+import VacancyViewPage from './pages/VacancyViewPage';
 
-
-function App() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [userType, setUserType] = useState('employee');
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleLogin = (userData) => {
-    setUser(userData);
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
+function App() {    
+  const { currentUser, loading, logout } = useAuth();
 
   if (loading) {
     return (
@@ -49,17 +23,19 @@ function App() {
     );
   }
 
-  if (!user) {
-    return <Login onLogin={handleLogin} />;
+  if (!currentUser) {
+    return <Login />;
   }
+
+  const userType = currentUser?.role || 'employee';
 
   return (
     <Router>
       <div className="app">
         <Navbar 
           userType={userType} 
-          user={user}
-          onLogout={handleLogout}
+          user={currentUser}
+          onLogout={logout}
         />
         <main className="main-content">
           <Routes>
@@ -113,8 +89,9 @@ function App() {
                     Views: 843,
                     Link: "/materials/5"
                   }
-                ]} currentUser={user} />} />
-                <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+                ]} />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/vacancies/:id" element={<VacancyViewPage />} />
                 <Route path="*" element={<Navigate to="/vacancies" />} />
               </>
             ) : (
@@ -122,7 +99,8 @@ function App() {
                 <Route path="/vacancies" element={<VacanciesPage />} />
                 <Route path="/candidates" element={<CandidatesPage />} />
                 <Route path="/responses" element={<ResponsesPage />} />
-                <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/vacancies/:id" element={<VacancyViewPage />} />
                 <Route path="*" element={<Navigate to="/vacancies" />} />
               </>
             )}

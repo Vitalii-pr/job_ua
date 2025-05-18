@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import './HistoryPage.css';
 import VacancyBox from '../components/VacancyBox';
 
-// Sample vacancies data (in a real app, this would come from an API or database)
+
 const testVacancies = [
   {
     ID: 1,

@@ -99,7 +99,7 @@ export default function RecommendationDialog({ isOpen, onClose }) {
                   </button>
                   <button
                     type="submit"
-                    className="rounded bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-700"
+                    className="rounded bg-[#84112D] px-4 py-2 text-sm text-white hover:bg-[#84112F]"
                   >
                     Надіслати
                   </button>
