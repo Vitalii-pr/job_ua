@@ -13,6 +13,7 @@
     "@headlessui/react": "^2.2.3",
     "daisyui": "^5.0.35",
     "firebase": "^11.7.3",
+    "job_ua": "file:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
