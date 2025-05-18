@@ -16,7 +16,7 @@ const currentUser = {
   Skills: 'Figma 4, UI/UX 3, Prototyping 3, Product design 3, Wireframing 4, Тестування 2, Дослідження користувачів 2, Responsive design 2, Інформаційна архітектура 3, Adobe Photoshop 4, Adobe Illustrator 4'
 };
 
-// Exchange rate USD to UAH (approximate)
+
 const USD_TO_UAH = 40;
 
 // Helper function to check employment type equivalence

@@ -1,55 +1,136 @@
-import { useState } from 'react'
-import './App.css'
-import Navbar from './components/Navbar'
-import './components/Navbar.css'
+import { useState, useEffect } from 'react';
+import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from './firebase';
 
-// Import all pages
-import VacanciesPage from './pages/VacanciesPage'
-import HistoryPage from './pages/HistoryPage'
-import MaterialsPage from './pages/MaterialsPage'
-import ProfilePage from './pages/ProfilePage'
-import CandidatesPage from './pages/CandidatesPage'
-import ResponsesPage from './pages/ResponsesPage'
+import Navbar from './components/Navbar';
+import Login from './components/Login';
+import ProfilePage from './pages/ProfilePage';
+import VacanciesPage from './pages/VacanciesPage';
+import MaterialsPage from './pages/MaterialsPage';
+import HistoryPage from './pages/HistoryPage';
+import CandidatesPage from './pages/CandidatesPage';
+import ResponsesPage from './pages/ResponsesPage';
+
 
 function App() {
-  const [userType, setUserType] = useState('employee')
-  const [activePage, setActivePage] = useState('Вакансії')
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState('employee');
 
-  const toggleUserType = () => {
-    setUserType(userType === 'employee' ? 'employer' : 'employee')
-  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
 
-  // Function to handle navigation between pages
-  const handlePageChange = (pageName) => {
-    setActivePage(pageName)
-  }
+    return () => unsubscribe();
+  }, []);
 
-  // Render the active page based on the selected tab
-  const renderActivePage = () => {
-    switch (activePage) {
-      case 'Вакансії':
-        return <VacanciesPage />
-      case 'Історія відгуків':
-        return <HistoryPage />
-      case 'Корисні матеріали':
-        return <MaterialsPage />
-      case 'Мій профіль':
-        return <ProfilePage userType={userType} toggleUserType={toggleUserType} />
-      case 'Кандидати':
-        return <CandidatesPage />
-      case 'Відгуки кандидатів':
-        return <ResponsesPage />
-      default:
-        return <VacanciesPage />
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
   }
 
   return (
-    <div className="app">
-      <Navbar userType={userType} onPageChange={handlePageChange} />
-      {renderActivePage()}
-    </div>
-  )
+    <Router>
+      <div className="app">
+        <Navbar 
+          userType={userType} 
+          user={user}
+          onLogout={handleLogout}
+        />
+        <main className="main-content">
+          <Routes>
+            {userType === 'employee' ? (
+              <>
+                <Route path="/vacancies" element={<VacanciesPage />} />
+                <Route path="/history" element={<HistoryPage />} />
+                <Route path="/materials" element={<MaterialsPage materials={[
+                  {
+                    ID: 1,
+                    Title: "Як написати резюме, яке приверне увагу рекрутера",
+                    Description: "Резюме — це ваша візитна картка на ринку праці. У цій статті ми розглянемо ключові елементи ефективного резюме, поширені помилки та практичні поради щодо структурування вашого досвіду. Ви дізнаєтесь, як виділитися серед інших кандидатів та зробити ваше резюме таким, що запам'ятовується рекрутерам.",
+                    Tags: "Резюме, Пошук роботи, Кар'єра, Поради",
+                    Date: "15 травня 2025",
+                    Views: 1245,
+                    Link: "/materials/1"
+                  },
+                  {
+                    ID: 2,
+                    Title: "10 порад для успішної співбесіди",
+                    Description: "Співбесіда — це ваш шанс показати, чому саме ви ідеально підходите для цієї посади. У цій статті ми розглянемо, як підготуватися до співбесіди, які питання очікувати та як на них відповідати, а також як справити хороше враження на потенційного роботодавця.",
+                    Tags: "Співбесіда, Пошук роботи, Кар'єра, Поради, HR",
+                    Date: "10 травня 2025",
+                    Views: 987,
+                    Link: "/materials/2"
+                  },
+                  {
+                    ID: 3,
+                    Title: "Як розвивати soft skills для успішної кар'єри",
+                    Description: "Soft skills, або м'які навички, стають все більш важливими для роботодавців. У цій статті ми розглянемо, які soft skills найбільш цінуються на ринку праці, як їх розвивати та демонструвати під час співбесіди та на робочому місці.",
+                    Tags: "Soft skills, Кар'єра, Розвиток, Навички, Комунікація",
+                    Date: "5 травня 2025",
+                    Views: 756,
+                    Link: "/materials/3"
+                  },
+                  {
+                    ID: 4,
+                    Title: "Як знайти роботу своєї мрії: покрокова інструкція",
+                    Description: "Знайти роботу, яка приноситиме не лише гроші, але й задоволення, — мрія багатьох. У цій статті ми розглянемо, як визначити, яка робота вам підходить, де шукати вакансії та як підготуватися до процесу працевлаштування.",
+                    Tags: "Пошук роботи, Кар'єра, Мотивація, Цілі, Планування",
+                    Date: "1 травня 2025",
+                    Views: 1102,
+                    Link: "/materials/4"
+                  },
+                  {
+                    ID: 5,
+                    Title: "Як ефективно вести переговори про зарплату",
+                    Description: "Обговорення зарплати — один з найскладніших аспектів пошуку роботи. У цій статті ми розглянемо, як підготуватися до переговорів, як визначити свою ринкову вартість та як впевнено вести діалог з роботодавцем про компенсацію.",
+                    Tags: "Зарплата, Переговори, Кар'єра, Фінанси, HR",
+                    Date: "25 квітня 2025",
+                    Views: 843,
+                    Link: "/materials/5"
+                  }
+                ]} currentUser={user} />} />
+                <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+                <Route path="*" element={<Navigate to="/vacancies" />} />
+              </>
+            ) : (
+              <>
+                <Route path="/vacancies" element={<VacanciesPage />} />
+                <Route path="/candidates" element={<CandidatesPage />} />
+                <Route path="/responses" element={<ResponsesPage />} />
+                <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+                <Route path="*" element={<Navigate to="/vacancies" />} />
+              </>
+            )}
+          </Routes>
+        </main>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;

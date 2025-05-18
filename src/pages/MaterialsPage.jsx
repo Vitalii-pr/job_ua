@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './MaterialsPage.css';
 import MaterialBox from '../components/MaterialBox';
 
@@ -50,8 +50,6 @@ const testMaterials = [
     Link: "/materials/5"
   }
 ];
-
-// Default user data (ID: 1)
 const currentUser = {
   ID: 1,
   Name: "Test",
@@ -69,119 +67,229 @@ const currentUser = {
   Liked_materials: "1, 3",
   Wieved_materials: "1, 2, 3, 4"
 };
+const currentUserSample = {
+  ID: 1,
+  Liked_materials: "1, 3",
+};
+export default function MaterialsPage({
+  materials = [],
+  currentUser = { Liked_materials: '' },
+  onMaterialClick = () => {},
+}) {
+  const [activeTab, setActiveTab] = useState('all');
+  const [searchText, setSearchText] = useState('');
+  const [searchTerms, setSearchTerms] = useState([]);
+  const [pendingSortBy, setPendingSortBy] = useState('');
+  const [appliedSortBy, setAppliedSortBy] = useState('');
+  const [likedMaterials, setLikedMaterials] = useState(
+    (currentUser.Liked_materials || '').split(', ').filter(Boolean)
+  );
 
-const MaterialsPage = () => {
-  // State for search query
-  const [searchQuery, setSearchQuery] = useState('');
-  const [likedMaterials, setLikedMaterials] = useState([]);
-  
-  // Parse user's liked materials
+  const pageRef = useRef(null);
+  const tabsRef = useRef(null);
+  const [searchOffset, setSearchOffset] = useState(0);
+
+  // Оновлюємо список лайків при зміні користувача
   useEffect(() => {
-    if (currentUser && currentUser.Liked_materials) {
-      const liked = currentUser.Liked_materials.split(', ').map(id => parseInt(id.trim()));
-      setLikedMaterials(liked);
+    setLikedMaterials(
+      (currentUser.Liked_materials || '').split(', ').filter(Boolean)
+    );
+  }, [currentUser.Liked_materials]);
+
+  // Вираховуємо зсув для пошуку по позиції активної вкладки
+  useEffect(() => {
+    if (!tabsRef.current || !pageRef.current) return;
+    const label = tabsRef.current.querySelector('.tab.active .tab-label');
+    if (label) {
+      const pageRect = pageRef.current.getBoundingClientRect();
+      const labelRect = label.getBoundingClientRect();
+      setSearchOffset(labelRect.left - pageRect.left);
     }
-  }, []);
-  
-  // Handle material click
-  const handleMaterialClick = (materialId) => {
-    console.log(`Navigating to material details for ID: ${materialId}`);
-    // In a real application, you would navigate to the material details page
-    // navigate(`/materials/${materialId}`);
-    
-    // You could also show a modal with material details
-    alert(`Clicked on material ${materialId}. This would navigate to the material details page.`);
+  }, [activeTab]);
+
+  const handleLike = id => {
+    const sid = id.toString();
+    setLikedMaterials(prev =>
+      prev.includes(sid) ? prev.filter(x => x !== sid) : [...prev, sid]
+    );
+  };
+  const handleSearch = () => {
+    if (searchText.trim() && !searchTerms.includes(searchText.trim())) {
+      setSearchTerms(prev => [...prev, searchText.trim()]);
+      setSearchText('');
+    }
+  };
+  const handleKeyPress = e => e.key === 'Enter' && handleSearch();
+  const handleReset = () => {
+    setSearchText('');
+    setPendingSortBy('');
+    setAppliedSortBy('');
+    setSearchTerms([]);
   };
   
-  // Handle like/unlike
-  const handleLikeToggle = (materialId) => {
-    // Toggle like status
-    if (likedMaterials.includes(materialId)) {
-      // Remove from liked materials
-      setLikedMaterials(likedMaterials.filter(id => id !== materialId));
-      // In a real app, update the user's liked materials in the database
-    } else {
-      // Add to liked materials
-      setLikedMaterials([...likedMaterials, materialId]);
-      // In a real app, update the user's liked materials in the database
-    }
+  const removeSearchTerm = (termToRemove) => {
+    setSearchTerms(prev => prev.filter(term => term !== termToRemove));
   };
   
-  // Sort and filter materials
-  const sortedMaterials = useMemo(() => {
-    // First filter by search query if any
-    let filtered = testMaterials;
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = testMaterials.filter(material => 
-        material.Title.toLowerCase().includes(query) || 
-        material.Description.toLowerCase().includes(query) ||
-        material.Tags.toLowerCase().includes(query)
-      );
-    }
-    
-    // Then sort: liked materials first, then by date (newest first)
-    return [...filtered].sort((a, b) => {
-      // First sort by liked status
-      const aLiked = likedMaterials.includes(a.ID);
-      const bLiked = likedMaterials.includes(b.ID);
-      
-      if (aLiked && !bLiked) return -1;
-      if (!aLiked && bLiked) return 1;
-      
-      // Then sort by date (assuming date strings can be compared directly)
-      // In a real app, you'd parse these into actual Date objects
-      return b.Date.localeCompare(a.Date);
-    });
-  }, [testMaterials, searchQuery, likedMaterials]);
-  
+  const clearAllSearchTerms = () => {
+    setSearchTerms([]);
+    setSearchText('');
+  };
+  const applyFilters = () => setAppliedSortBy(pendingSortBy);
+
+  // Фільтрація + сортування
+  const allMaterials = Array.isArray(materials) ? materials : [];
+  const byTab =
+    activeTab === 'all'
+      ? allMaterials
+      : allMaterials.filter(m => likedMaterials.includes(m.ID.toString()));
+  const bySearch = byTab.filter(m => {
+    if (searchTerms.length === 0) return true;
+    return searchTerms.some(term => 
+      m.Title.toLowerCase().includes(term.toLowerCase())
+    );
+  });
+  const sorted = [...bySearch].sort((a, b) => {
+    if (appliedSortBy === 'views') return b.Views - a.Views;
+    if (appliedSortBy === 'date')
+      return new Date(b.Date).getTime() - new Date(a.Date).getTime();
+    return 0;
+  });
+
   return (
-    <div className="materials-page">
-      {/* Search section */}
-      <div className="search-section">
-        <div className="search-container">
-          <h1 className="search-title">Корисні матеріали</h1>
-          <div className="search-form">
-            <div className="search-input-container">
-              <input
-                type="text"
-                placeholder="Пошук за ключовими словами"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
-              <svg className="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="#666666"/>
-              </svg>
-            </div>
-          </div>
-        </div>
+    <section className="materials-page" ref={pageRef}>
+      {/* === Таби === */}
+      <div className="tabs" ref={tabsRef}>
+        <button
+          className={`tab${activeTab === 'all' ? ' active' : ''}`}
+          onClick={() => setActiveTab('all')}
+        >
+          <span className="tab-label">Усі статті</span>
+        </button>
+        <button
+          className={`tab${activeTab === 'saved' ? ' active' : ''}`}
+          onClick={() => setActiveTab('saved')}
+        >
+          <span className="tab-label">Збережені статті</span>
+        </button>
       </div>
-      
-      {/* Materials list section */}
-      <div className="content-section">
-        <div className="materials-container">
-          {/* Materials list */}
-          <div className="materials-list">
-            {sortedMaterials.length > 0 ? (
-              sortedMaterials.map(material => (
-                <MaterialBox
-                  key={material.ID}
-                  material={material}
-                  onMaterialClick={handleMaterialClick}
-                  currentUser={currentUser}
-                />
-              ))
-            ) : (
-              <div className="no-results">
-                <p>Не знайдено матеріалів за вашим запитом.</p>
+
+      {/* === Пошук (завжди під активною вкладкою) === */}
+      <div className="materials-search-block">
+        <h2 className="search-title">
+          {activeTab === 'all' ? 'Шукати вакансії' : 'Шукати серед збережених статтей'}
+        </h2>
+        <div className="materials-search">
+          <div className="search-input-wrapper">
+            <svg
+              className="search-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle cx="11" cy="11" r="8" stroke="#888" strokeWidth="2" fill="none" />
+              <line
+                x1="21"
+                y1="21"
+                x2="16.65"
+                y2="16.65"
+                stroke="#888"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Пошук"
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
+            {searchTerms.length > 0 && (
+              <div className="search-tags">
+                {searchTerms.map((term, index) => (
+                  <div className="search-tag" key={index}>
+                    {term}
+                    <button 
+                      className="tag-remove" 
+                      onClick={() => removeSearchTerm(term)}
+                    >
+                      &#10005;
+                    </button>
+                  </div>
+                ))}
+                {searchTerms.length > 1 && (
+                  <button 
+                    className="clear-all-tags" 
+                    onClick={clearAllSearchTerms}
+                  >
+                    Очистити все
+                  </button>
+                )}
               </div>
             )}
           </div>
+          <button className="btn-search" onClick={handleSearch}>
+            Пошук
+          </button>
         </div>
       </div>
-    </div>
-  );
-};
 
-export default MaterialsPage;
+      {/* === Сайдбар + Контент === */}
+      <div className="materials-content">
+        <aside className="materials-sidebar">
+          <div className="sidebar-group">
+            <label htmlFor="sort-select">Сортувати за</label>
+            <select
+              id="sort-select"
+              className="sort-select"
+              value={pendingSortBy}
+              onChange={e => setPendingSortBy(e.target.value)}
+            >
+              <option value="">Вибрати</option>
+              <option value="date">Дата</option>
+              <option value="views">Перегляди</option>
+            </select>
+          </div>
+          <div className="sidebar-group actions">
+            <button className="btn-reset" onClick={handleReset}>
+              Скинути
+            </button>
+            <button className="btn-apply" onClick={applyFilters}>
+              Застосувати
+            </button>
+          </div>
+        </aside>
+
+        <main className="materials-main">
+          <div className="materials-list">
+            {sorted.map(m => (
+              <MaterialBox
+                key={m.ID}
+                material={m}
+                currentUser={{
+                  ...currentUser,
+                  Liked_materials: likedMaterials.join(', ')
+                }}
+                searchTerms={searchTerms}
+                onMaterialClick={onMaterialClick}
+                onLike={handleLike}
+              />
+            ))}
+            {sorted.length === 0 && (
+              <div className="no-results">
+                {searchTerms.length > 0
+                  ? 'За вашим запитом нічого не знайдено'
+                  : activeTab === 'saved'
+                  ? 'У вас поки немає збережених статей'
+                  : 'Статті відсутні'}
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
+    </section>
+  );
+}
