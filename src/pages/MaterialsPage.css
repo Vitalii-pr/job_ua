@@ -1,292 +1,173 @@
-/* src/pages/MaterialsPage.css */
-
-.materials-page {
-  display: flex;
-  flex-direction: column;
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
-/* === Таби === */
+/* — вкладки */
 .tabs {
   display: flex;
-  gap: 32px;
-  padding-left: 60px;
-  margin-bottom: 16px;
+  gap: 24px;
 }
-
 .tab {
   background: none;
   border: none;
-  padding: 12px 8px;
-  margin-right: 24px;
-  font-size: 16px;
+  font-size: 18px;
   color: #666;
   cursor: pointer;
-  outline: none;
-  transition: background-color 0.2s;
-  width: 120px;
-  text-align: center;
 }
-
 .tab.active {
   color: #84112d;
-  font-weight: 500;
   text-decoration: underline;
-  text-decoration-color: #84112d;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
-  border-bottom: none;
 }
 
-/* === Грід === */
-.materials-content {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    ". search"
-    "sidebar main";
-  column-gap: 24px;
-  row-gap: 24px;
-  padding-top: 8px;
-  padding-left: 24px;
-  padding-right: 24px;
-  padding-bottom: 24px;
-}
-
-.empty-cell {
-  grid-area: 1 / 1;
-}
-
-/* === Пошук === */
-.materials-search-block {
-  grid-area: search;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 16px 24px 16px 0;
-  margin-left: 156px;
-}
-
-.search-title {
-  margin: 0 0 12px 0;
-  font-size: 32px;
-  font-weight: 700;
-  color: #000000;
-  display: block;
-  width: 50%;
-}
-
+/* — пошукова панель */
 .materials-search {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 16px;
+  margin-top: 24px;
+  margin-left: 200px; /* вирівняно під “Збережені статті” */
 }
-
-.search-input-wrapper {
+.search-row {
   position: relative;
-}
-
-/* Search tags styling */
-.search-tags {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  margin-top: 8px;
-  position: relative;
-  z-index: 0;
 }
-
-.search-tag {
-  display: flex;
-  align-items: center;
-  background-color: #84112d;
-  color: white;
-  font-size: 13px;
-  padding: 4px 8px;
-  border-radius: 0;
-}
-
-.tag-remove {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 12px;
-  margin-left: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.clear-all-tags {
-  background: none;
-  border: 1px solid #84112d;
-  color: #84112d;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 0;
-  cursor: pointer;
-  margin-left: 8px;
-}
-
 .search-icon {
   position: absolute;
   left: 12px;
-  top: 23px;
+  top: 50%;
   transform: translateY(-50%);
-  z-index: 1;
-  pointer-events: none;
+  width: 16px;
+  height: 16px;
 }
-
 .search-input {
-  width: 100%;
-  padding: 12px 12px 12px 40px;
+  padding: 0 12px 0 36px; /* місце під іконку */
+  height: 40px;           /* такий самий, як кнопка */
   font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 0;
+  border-radius: 4px;
+  width: 600px;
 }
-
 .btn-search {
-  height: 44px;
-  padding: 0 50px;
-  min-width: 180px;
-  background-color: #84112d;
+  height: 40px;
+  width: 160px;
+  background: #84112d;
   color: #fff;
-  font-size: 14px;
   border: none;
-  border-radius: 0;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-/* === Сайдбар === */
-.materials-sidebar {
-  grid-area: sidebar;
+/* — теги пошуку */
+.search-tags {
+  margin-top: 8px;
   display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 115%;
-}
-
-.sidebar-group {
-  display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 8px;
 }
-
-.sort-select {
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 0;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2384112d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
+.tag {
+  background: #f2f2f2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
 }
-
-.actions {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  width: 100%;
+.tag.highlight {
+  background: #ffe5e5;
+  color: #84112d;
 }
-
-.btn-reset,
-.btn-apply {
-  flex: 1;
-  height: 40px;
-  font-size: 14px;
-  border-radius: 0;
+.tag-remove {
+  margin-left: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.clear-all {
+  background: none;
+  border: none;
+  color: #84112d;
   cursor: pointer;
 }
 
-.btn-reset {
-  background: none;
-  border: 1px solid #888;
-  color: #444;
-}
-
-.btn-apply {
-  background-color: #84112d;
-  border: none;
-  color: #fff;
-}
-
-/* === Контент === */
-.materials-main {
-  grid-area: main;
+/* — контент */
+.materials-content {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.materials-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 96%;
-}
-
-.no-results {
-  font-size: 16px;
-  color: #888;
-  text-align: center;
+  gap: 32px;
   margin-top: 32px;
 }
 
-
-/* ==== ТАБИ ==== */
-.tabs {
+/* — sidebar */
+.materials-sidebar {
+  width: 280px;
   display: flex;
-  gap: 32px;
-  padding-left: 60px;
-  /* приберемо фокус-рамку, щоб кнопка не “прямокутник” на click */
+  flex-direction: column;
+  gap: 16px;
 }
-
-.tab {
-  background: none;
+.materials-sidebar select {
+  width: 100%;
+  height: 40px;
+  appearance: none;
+  background: #f2f2f4;
   border: none;
-  padding: 12px 8px;
-  margin-right: 24px;
-  font-size: 16px;
-  color: #666;
+  padding: 0 36px 0 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #555;
+  position: relative;
+  /* отут — без заокруглених кінчиків стрілки */
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0,0 L5,6 L10,0' stroke='%2384112d' stroke-width='2' stroke-linecap='butt' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 10px 6px;
   cursor: pointer;
-  outline: none;              /* скидаємо фокус-стиль */
-  transition: background-color 0.2s;
 }
 
-.tab:focus {
+.sidebar-actions {
+  display: flex;
+  gap: 12px;
+}
+.sidebar-actions button {
+  flex: 1; /* кожна кнопка займає пів ширини sidebar */
+  height: 40px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-reset {
+  background: #fff;
+  border: 1px solid #84112d;
+  color: #84112d;
+}
+.btn-apply {
+  background: #84112d;
+  border: none;
+  color: #fff;
+}
+
+/* — main */
+.materials-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.link-reset {
+  text-decoration: none;
+  color: inherit;
+}
+.no-results {
+  padding: 48px 0;
+  color: #888;
+  font-size: 16px;
+  text-align: center;
+}
+
+.tab:focus,
+.tab:focus-visible {
   outline: none;
 }
 
-/* This style is replaced by the main tab.active style above */
-
-/* ==== ПОШУК (грід) ==== */
-.materials-content {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    ". search"
-    "sidebar main";
-  column-gap: 70px;
-  row-gap: 8px;
-  padding: 20px 8px 24px 60px;
-  margin-top: 20px;
+.material-detail-page .bookmark-button:focus,
+.material-detail-page .bookmark-button:focus-visible {
+  outline: none;
 }
-
-.empty-cell {
-  grid-area: 1 / 1;
-}
-
-.materials-search-block {
-  grid-area: search;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0 180px;
-}
-
-/* решта ваших стилів для .search-title, .materials-search тощо */
