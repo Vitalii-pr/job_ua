@@ -11,16 +11,65 @@ const MaterialBox = ({
   const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
-    const likedIds = (currentUser.Liked_materials || '')
-      .split(', ')
-      .map(x => parseInt(x, 10));
+    // Якщо Liked_materials вже масив – беремо його, інакше сплітимо по комі
+    let likedIds = [];
+    if (Array.isArray(currentUser.Liked_materials)) {
+      likedIds = currentUser.Liked_materials.map(id => parseInt(id, 10));
+    } else {
+      likedIds = (currentUser.Liked_materials || '')
+        .split(',')               // розділяємо по всіх комах
+        .map(x => parseInt(x.trim(), 10))
+        .filter(n => !isNaN(n));
+    }
     setIsLiked(likedIds.includes(material.ID));
   }, [currentUser.Liked_materials, material.ID]);
 
   const handleLikeClick = e => {
+    e.preventDefault();
     e.stopPropagation();
-    onLike(material.ID);
+    
+    // Зберігаємо в localStorage
+    const materialId = material.ID.toString();
+    let likedMaterials = [];
+    
+    // Спочатку отримуємо всі збережені матеріали
+    if (window.localStorage) {
+      const storedLiked = window.localStorage.getItem('likedMaterials');
+      if (storedLiked) {
+        likedMaterials = JSON.parse(storedLiked);
+      }
+    }
+    
+    let updatedLiked;
+    
+    // Оновлюємо список збережених
+    if (isLiked) {
+      updatedLiked = likedMaterials.filter(id => id !== materialId);
+    } else {
+      updatedLiked = [...likedMaterials, materialId];
+    }
+    
+    // Зберігаємо оновлений список
+    if (window.localStorage) {
+      window.localStorage.setItem('likedMaterials', JSON.stringify(updatedLiked));
+    }
+    
+    // Змінюємо стан та інформуємо батьківський компонент
     setIsLiked(prev => !prev);
+    onLike(material.ID);
+    
+    // Спливаюче повідомлення
+    const message = isLiked ? 'Матеріал видалено із збережених' : 'Матеріал збережено';
+    const toast = document.createElement('div');
+    toast.className = 'save-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      if (document.body.contains(toast)) {
+        document.body.removeChild(toast);
+      }
+    }, 3000);
   };
 
   const handleCardClick = () => onMaterialClick(material.ID);
