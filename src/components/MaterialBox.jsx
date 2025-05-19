@@ -3,26 +3,28 @@ import './MaterialBox.css';
 
 const MaterialBox = ({
   material,
-  currentUser = { Liked_materials: '' },
+  currentUser,
   searchTerms = [],
   onMaterialClick = () => {},
   onLike = () => {}
 }) => {
+  // Ensure currentUser is never null
+  const user = currentUser || { Liked_materials: '' };
   const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     // Якщо Liked_materials вже масив – беремо його, інакше сплітимо по комі
     let likedIds = [];
-    if (Array.isArray(currentUser.Liked_materials)) {
-      likedIds = currentUser.Liked_materials.map(id => parseInt(id, 10));
+    if (Array.isArray(user.Liked_materials)) {
+      likedIds = user.Liked_materials.map(id => parseInt(id, 10));
     } else {
-      likedIds = (currentUser.Liked_materials || '')
+      likedIds = (user.Liked_materials || '')
         .split(',')               // розділяємо по всіх комах
         .map(x => parseInt(x.trim(), 10))
         .filter(n => !isNaN(n));
     }
     setIsLiked(likedIds.includes(material.ID));
-  }, [currentUser.Liked_materials, material.ID]);
+  }, [user.Liked_materials, material.ID, user]);
 
   const handleLikeClick = e => {
     e.preventDefault();
