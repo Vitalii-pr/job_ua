@@ -4,7 +4,6 @@
   padding: 24px;
 }
 
-/* — вкладки */
 .tabs {
   display: flex;
   gap: 24px;
@@ -21,10 +20,9 @@
   text-decoration: underline;
 }
 
-/* — пошукова панель */
 .materials-search {
   margin-top: 24px;
-  margin-left: 200px; /* вирівняно під “Збережені статті” */
+  margin-left: 200px;
 }
 .search-row {
   position: relative;
@@ -41,8 +39,8 @@
   height: 16px;
 }
 .search-input {
-  padding: 0 12px 0 36px; /* місце під іконку */
-  height: 40px;           /* такий самий, як кнопка */
+  padding: 0 12px 0 36px;
+  height: 40px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -58,7 +56,6 @@
   cursor: pointer;
 }
 
-/* — теги пошуку */
 .search-tags {
   margin-top: 8px;
   display: flex;
@@ -89,14 +86,12 @@
   cursor: pointer;
 }
 
-/* — контент */
 .materials-content {
   display: flex;
   gap: 32px;
   margin-top: 32px;
 }
 
-/* — sidebar */
 .materials-sidebar {
   width: 280px;
   display: flex;
@@ -114,7 +109,6 @@
   font-size: 14px;
   color: #555;
   position: relative;
-  /* отут — без заокруглених кінчиків стрілки */
   background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0,0 L5,6 L10,0' stroke='%2384112d' stroke-width='2' stroke-linecap='butt' fill='none'/></svg>");
   background-repeat: no-repeat;
   background-position: right 12px center;
@@ -127,7 +121,7 @@
   gap: 12px;
 }
 .sidebar-actions button {
-  flex: 1; /* кожна кнопка займає пів ширини sidebar */
+  flex: 1;
   height: 40px;
   font-size: 14px;
   border-radius: 4px;
@@ -144,7 +138,6 @@
   color: #fff;
 }
 
-/* — main */
 .materials-main {
   flex: 1;
   display: flex;

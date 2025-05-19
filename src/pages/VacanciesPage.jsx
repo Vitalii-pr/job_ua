@@ -12,7 +12,7 @@ const VacanciesPage = () => {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Filter state
+
   const [searchQuery, setSearchQuery] = useState('');
   const [specialization, setSpecialization] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -36,13 +36,12 @@ const VacanciesPage = () => {
   const handleVacancyClick = (vacancyId) => {
     navigate(`/vacancies/${vacancyId}`);
   };
-  // Fetch data
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         
-        // Fetch vacancies
         const vacanciesQuery = query(
           collection(db, 'vacancies'),
           where('isActive', '==', true)
@@ -54,7 +53,6 @@ const VacanciesPage = () => {
           createdAt: doc.data().createdAt || doc.data().Created_at
         }));
         
-        // Fetch companies
         const companiesQuery = query(
           collection(db, 'users'),
           where('role', '==', 'employer')
@@ -77,7 +75,6 @@ const VacanciesPage = () => {
     fetchData();
   }, []);
 
-  // Handle checkbox changes
   const handleCheckbox = (setter, field) => (e) => {
     setter(prev => ({
       ...prev,
@@ -85,7 +82,6 @@ const VacanciesPage = () => {
     }));
   };
 
-  // Reset all filters
   const handleReset = () => {
     setSearchQuery('');
     setSpecialization('');
@@ -107,11 +103,9 @@ const VacanciesPage = () => {
     setEnglishLevel('');
   };
 
-  // Apply filters
   const filteredVacancies = useMemo(() => {
     let result = [...vacancies];
 
-    // Search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(v => 
@@ -120,12 +114,10 @@ const VacanciesPage = () => {
       );
     }
 
-    // Specialization
     if (specialization) {
       result = result.filter(v => v.Position === specialization);
     }
 
-    // Employment types
     if (Object.values(employmentTypes).some(v => v)) {
       const typeMap = {
         full: 'Повна зайнятість',
@@ -142,7 +134,6 @@ const VacanciesPage = () => {
       );
     }
 
-    // Work formats
     if (Object.values(workFormats).some(v => v)) {
       const formatMap = {
         remote: 'Віддалена',
@@ -158,29 +149,24 @@ const VacanciesPage = () => {
       );
     }
 
-    // Qualification level
     if (qualificationLevel) {
       result = result.filter(v => v.Qualification === qualificationLevel);
     }
 
-    // Location
     if (location) {
       result = result.filter(v => 
         v.Work_place.toLowerCase().includes(location.toLowerCase())
       );
     }
 
-    // Salary
     if (salaryMin > 0) {
       result = result.filter(v => v.Payrate >= salaryMin);
     }
 
-    // English level
     if (englishLevel) {
       result = result.filter(v => v.English_lvl === englishLevel);
     }
 
-    // Sorting
     switch (sortBy) {
       case 'date':
         return result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -214,7 +200,6 @@ const VacanciesPage = () => {
 
   return (
     <div className="vacancies-container">
-      {/* Search header */}
       <div className="search-header-box">
         <div className="search-box">
           <h2 className="search-title">Шукати вакансії</h2>
@@ -222,7 +207,6 @@ const VacanciesPage = () => {
             e.preventDefault();
           }}>
             <div className="search-input-container">
-              {/* Search input */}
               <div className="search-field">
                 <svg className="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -236,7 +220,6 @@ const VacanciesPage = () => {
                 />
               </div>
 
-              {/* Specialization select */}
               <div className="specialization-field">
                 <select
                   className="specialization-select"
@@ -254,18 +237,14 @@ const VacanciesPage = () => {
                 </svg>
               </div>
 
-              {/* Search button */}
               <button type="submit" className="search-button">Пошук</button>
             </div>
           </form>
         </div>
       </div>
 
-      {/* Content: Sidebar + Results */}
       <div className="page-content">
-        {/* Sidebar filters */}
         <aside className="filters-sidebar">
-          {/* Sort dropdown */}
           <div className="filter-section">
             <label className="filter-label">Сортувати за</label>
             <div className="select-wrapper">
@@ -281,11 +260,9 @@ const VacanciesPage = () => {
             </div>
           </div>
 
-          {/* Filters */}
           <div className="filter-section">
             <h3 className="filter-heading">Фільтри</h3>
 
-            {/* Employment types */}
             <p className="subheading">Тип зайнятості</p>
             <label className="checkbox-label">
               <input 
@@ -320,7 +297,6 @@ const VacanciesPage = () => {
               <span>Стажування</span>
             </label>
 
-            {/* Format */}
             <p className="subheading">Формат роботи</p>
             <label className="checkbox-label">
               <input 
@@ -347,7 +323,6 @@ const VacanciesPage = () => {
               <span>Офіс</span>
             </label>
 
-            {/* Qualification Level */}
             <p className="subheading">Рівень кваліфікації</p>
             <div className="select-wrapper small">
               <select 
@@ -364,7 +339,6 @@ const VacanciesPage = () => {
               </svg>
             </div>
 
-            {/* Country, City */}
             <p className="subheading">Країна, місто</p>
             <div className="search-field small">
               <svg className="search-icon red" width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -379,7 +353,6 @@ const VacanciesPage = () => {
               />
             </div>
 
-            {/* Salary expectations */}
             <p className="subheading">Зарплатні очікування</p>
             <input
               type="range"
@@ -395,7 +368,7 @@ const VacanciesPage = () => {
             />
             <div className="salary-values">від {salaryMin.toLocaleString()}₴</div>
 
-            {/* English level */}
+
             <p className="subheading">Рівень англійської</p>
             <div className="select-wrapper small">
               <select 
@@ -413,7 +386,7 @@ const VacanciesPage = () => {
               </svg>
             </div>
 
-            {/* Actions */}
+
             <div className="filter-actions">
               <button 
                 type="button" 
@@ -432,7 +405,7 @@ const VacanciesPage = () => {
           </div>
         </aside>
 
-        {/* Results */}
+
         <main className="vacancies-results">
           {filteredVacancies.length > 0 ? (
             filteredVacancies.map(vacancy => {
