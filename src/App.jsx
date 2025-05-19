@@ -205,7 +205,10 @@ function App() {
                     Views: 843,
                     Link: "/materials/5"
                   }
-                ]} currentUser={user} />} />
+                ]} 
+                currentUser={currentUser} 
+                likedMaterials={likedMaterials}
+                onLike={handleLikeMaterial} />} />
                 <Route path="/profile" element={<ProfilePage/>} />
                 <Route path="*" element={<Navigate to="/vacancies" />} />
                 <Route path="/vacancies/:id" element={<VacancyViewPage />} />

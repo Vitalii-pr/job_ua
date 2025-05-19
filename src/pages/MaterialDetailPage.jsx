@@ -40,12 +40,17 @@ export default function MaterialDetailPage({ materials = [], currentUser = {}, l
 
   const doSearch = () => {
     const term = searchText.trim();
-    if (term && !searchTerms.includes(term)) {
+    if (term && term.length > 0 && !searchTerms.includes(term)) {
       setSearchTerms(prev => [...prev, term]);
     }
     setSearchText('');
   };
-  const onKey = e => { if (e.key === 'Enter') doSearch(); };
+  const onKey = e => { 
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      doSearch();
+    } 
+  };
   const removeTerm = term => setSearchTerms(prev => prev.filter(t => t !== term));
   const toggleTerm = tag => searchTerms.includes(tag) ? removeTerm(tag) : setSearchTerms(prev => [...prev, tag]);
   const clearAll = () => setSearchTerms([]);
